@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+require_relative '../lib/wmctile'
+
+router = Wmctile::Router.new
+router.dispatch ARGV
