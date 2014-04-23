@@ -5,6 +5,7 @@ class Wmctile::WindowManager
 		@settings = settings
 		self.init_dimensions
 	end
+
 	def init_dimensions
 		dimensions = cmd("wmctrl -d | awk '{ print $9 }' | head -n1").split('x')
 		@w = dimensions[0].to_i - 2*@settings.window_border
@@ -16,6 +17,10 @@ class Wmctile::WindowManager
 	end
 	def height portion
 		@h * portion
+	end
+
+	def find_window window_string
+		puts "Finding window #{ window_string }."
 	end
 	# def get_active_win
 	# 	Window.new cmd("wmctrl -lx | grep #{ cmd('wmctrl -a :ACTIVE: -v').split('Using window: ')[1] }")

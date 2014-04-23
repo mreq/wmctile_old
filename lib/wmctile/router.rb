@@ -16,8 +16,12 @@ class Wmctile::Router
 		puts 'help'
 	end
 	def snap where = 'left', window = nil
-		window = self.wm.ask_for_window  if window.nil?
-		self.wm.snap where, window
+		if window.nil?
+			window = self.wm.ask_for_window
+		else
+			window = self.wm.find_window window
+		end
+		self.wt.snap window, where
 	end
 
 
