@@ -32,7 +32,8 @@ class Wmctile::Settings
 	def default_settings
 		{
 			:window_border => 1,
-			:panel_height => 24
+			:panel_height => 24,
+			:hostname => cmd('hostname')[0..-2]
 		}.to_yaml
 	end
 end

@@ -1,7 +1,8 @@
 class Wmctile::Window
-	def initialize win_string
+	def initialize win_string, settings
+		@settings = settings
 		@id = win_string[/0x[\d\w]{8}/]
-		after_id_and_workspace = win_string[14..-1].split(/\s+#{$hostname}\s+/, 2)
+		after_id_and_workspace = win_string[14..-1].split(/\s+#{ @settings.hostname }\s+/, 2)
 		@name = after_id_and_workspace[0]
 		@title = after_id_and_workspace[1]
 	end

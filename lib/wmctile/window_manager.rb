@@ -22,31 +22,36 @@ class Wmctile::WindowManager
 	def find_window window_string
 		puts "Finding window #{ window_string }."
 	end
+	def ask_for_window
+		a = dmenu self.windows.map(&:dmenu_item)
+		puts a
+		a
+	end
 	# def get_active_win
 	# 	Window.new cmd("wmctrl -lx | grep #{ cmd('wmctrl -a :ACTIVE: -v').split('Using window: ')[1] }")
 	# end
-	# def build_win_list current_workspace_only = true
-	# 	unless @windows
-	# 		if current_workspace_only
-	# 			cmd = "wmctrl -lx"
-	# 		else
-	# 			cmd = "wmctrl -lx | grep \" #{ @workspace } \""
-	# 		end
-	# 		arr = cmd(cmd).split("\n")
+	def build_win_list current_workspace_only = true
+		unless @windows
+			if current_workspace_only
+				cmd = "wmctrl -lx"
+			else
+				cmd = "wmctrl -lx | grep \" #{ @workspace } \""
+			end
+			arr = cmd(cmd).split("\n")
 
-	# 		@windows = arr.map { |w| Window.new(w) }
-	# 		name_length = @windows.map(&:name_length).max
-	# 		@windows.each { |w| w.set_name_length(name_length) }
-	# 	end
-	# 	@windows
-	# end
-	# def windows
-	# 	unless @windows
-	# 		return self.build_win_list
-	# 	else
-	# 		return @windows
-	# 	end
-	# end
+			@windows = arr.map { |w| Wmctile::Window.new(w, @settings) }
+			name_length = @windows.map(&:name_length).max
+			@windows.each { |w| w.set_name_length(name_length) }
+		end
+		@windows
+	end
+	def windows
+		unless @windows
+			self.build_win_list
+		else
+			@windows
+		end
+	end
 	# def prompt_for_window
 	# 	a = dmenu self.windows.map(&:dmenu_item)
 	# 	puts a
