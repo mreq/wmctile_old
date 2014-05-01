@@ -4,7 +4,7 @@ class Wmctile::Router
 		@settings = Wmctile::Settings.new
 	end
 
-	def dispatch args
+	def dispatch args = []
 		if args[0] and args[0] != 'dispatch' and self.respond_to? args[0]
 			self.send args[0], *args.drop(1)
 		else
@@ -14,6 +14,7 @@ class Wmctile::Router
 
 	def help args = nil
 		puts 'help'
+		'help'
 	end
 	def snap where = 'left', window = nil
 		window = get_window window

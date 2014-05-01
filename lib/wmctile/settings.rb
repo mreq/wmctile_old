@@ -1,7 +1,7 @@
 require 'yaml'
 
 class Wmctile::Settings
-	def self.method_missing sym, *args, &block
+	def method_missing sym, *args, &block
 		return false
 	end
 
@@ -26,7 +26,7 @@ class Wmctile::Settings
 			Dir.mkdir dir_path
 		end
 		out_file = File.new path, 'w'
-		out_file.puts self.default_settings
+		out_file.puts self.default_settings.to_yaml
 		out_file.close
 	end
 	def default_settings
@@ -34,6 +34,6 @@ class Wmctile::Settings
 			:window_border => 1,
 			:panel_height => 24,
 			:hostname => cmd('hostname')[0..-2]
-		}.to_yaml
+		}
 	end
 end

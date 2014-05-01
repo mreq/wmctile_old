@@ -2,7 +2,8 @@ require 'open3'
 require 'dmenu'
 
 def cmd cmd
-	Open3.popen3(cmd) { |stdin, stdout| stdout.read }
+	# [0..-2] to strip the last \n
+	Open3.popen3(cmd) { |stdin, stdout| stdout.read[0..-2] }
 end
 def wmctrl wm_id, wm_cmd, summon = false
 	cmd "wmctrl -i#{ summon ? 'R' : 'r' } #{ wm_id } #{ wm_cmd }"
