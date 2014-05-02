@@ -30,7 +30,7 @@ class Wmctile::Router < Wmctile::Class
 		end
 	end
 	def get_active_window
-		win_id = self.cmd('wmctrl -a :ACTIVE: -v').split('Using window: ').last
+		win_id = self.cmd('wmctrl -a :ACTIVE: -v 2>&1').split('Using window: ').last
 		Wmctile::Window.new win_id, @settings
 	end
 

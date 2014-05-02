@@ -24,6 +24,12 @@ class Wmctile::Window < Wmctile::Class
 		end
 		@dmenu_item
 	end
+	def get_name
+		if @name == ''
+			self.get_name_and_title self.cmd('wmctrl -lx | grep ' + @id)
+		end
+		@name
+	end
 	def get_name_length
 		@name.length
 	end
@@ -40,9 +46,12 @@ class Wmctile::Window < Wmctile::Class
 		self.unshade().wmctrl(cmd)
 	end
 	def shade
-		self.wmctrl('-b add,shaded')
+		self.wmctrl '-b add,shaded'
 	end
 	def unshade
-		self.wmctrl('-b remove,shaded')
+		self.wmctrl '-b remove,shaded'
+	end
+	def summon
+		self.wmctrl '', true
 	end
 end

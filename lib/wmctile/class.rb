@@ -1,10 +1,9 @@
-require 'open3'
 require 'dmenu'
 
 class Wmctile::Class
 	def cmd cmd
 		# [0..-2] to strip the last \n
-		Open3.popen3(cmd) { |stdin, stdout| stdout.read[0..-2] }
+		`#{ cmd }`[0..-2]
 	end
 	def dmenu items
 		a = Dmenu.new

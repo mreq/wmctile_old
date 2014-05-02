@@ -29,6 +29,13 @@ describe 'Window' do
 		new_name.should eq (name + ' '*(40 - name.length))
 	end
 
+	it 'is able to find it\'s name when initialized from id' do
+		router = Wmctile::Router.new
+		active_win = router.get_active_window
+		active_win.instance_variable_get(:@name).should eq ''
+		active_win.get_name.should_not eq ''
+	end
+
 	it 'returns itself in manipulation methods' do
 		[:move, :shade, :unshade].each do |m|
 			w.send(m).should be w
