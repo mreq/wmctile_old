@@ -1,5 +1,5 @@
 class Wmctile::WindowManager
-	attr_accessor :windows
+	attr_accessor :w, :h, :windows
 
 	def initialize settings
 		@settings = settings
@@ -10,7 +10,7 @@ class Wmctile::WindowManager
 		dimensions = cmd("wmctrl -d | awk '{ print $9 }' | head -n1").split('x')
 		@w = dimensions[0].to_i - 2*@settings.window_border
 		@h = dimensions[1].to_i - 2*@settings.window_border
-		@workspace = cmd("wmctrl -d | grep '\*' | cut -d' ' -f 1")
+		@workspace = cmd("wmctrl -d | grep '\*' | cut -d' ' -f 1").to_i
 	end
 	def width portion
 		@w * portion

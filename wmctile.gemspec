@@ -9,4 +9,10 @@ Gem::Specification.new do |s|
 	s.files       = ['lib/wmctile.rb']
 	s.homepage    = ''
 	s.license     = 'GPL-2'
+	# dependencies
+	{
+		:dmenu => '~> 0.0.2'
+	}.each do |dep, version|
+		s.add_runtime_dependency dep, version
+	end
 end

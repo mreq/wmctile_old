@@ -17,8 +17,9 @@ class Wmctile::Router
 		'help'
 	end
 	def snap where = 'left', window = nil
+		puts 'called snap'
 		window = get_window window
-		self.wt.snap window, where
+		window.snap where  unless window.nil?
 	end
 
 	def get_window window = nil
