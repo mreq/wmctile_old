@@ -1,4 +1,4 @@
-class Wmctile::WindowManager
+class Wmctile::WindowManager < Wmctile::Class
 	attr_accessor :w, :h, :windows
 
 	def initialize settings
@@ -27,9 +27,6 @@ class Wmctile::WindowManager
 		puts a
 		a
 	end
-	# def get_active_win
-	# 	Window.new cmd("wmctrl -lx | grep #{ cmd('wmctrl -a :ACTIVE: -v').split('Using window: ')[1] }")
-	# end
 	def build_win_list current_workspace_only = true
 		unless @windows
 			if current_workspace_only

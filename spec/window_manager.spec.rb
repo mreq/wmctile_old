@@ -6,7 +6,7 @@ describe 'WindowManager' do
 		wm = Wmctile::WindowManager.new Wmctile::Settings.new
 		# override dmenu for specs
 		def dmenu items
-			return items[0]			
+			return items.first
 		end
 	end
 

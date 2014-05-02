@@ -1,7 +1,7 @@
 module Wmctile
 end
 
-require_relative 'wmctile/helpers'
+require_relative 'wmctile/class'
 require_relative 'wmctile/settings'
 require_relative 'wmctile/window'
 require_relative 'wmctile/window_manager'

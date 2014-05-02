@@ -1,4 +1,4 @@
-class Wmctile::WindowTiler
+class Wmctile::WindowTiler < Wmctile::Class
 	def initialize settings, wm = nil
 		@settings = settings
 		@wm = wm

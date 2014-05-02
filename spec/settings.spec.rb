@@ -7,12 +7,11 @@ describe 'Settings' do
 	end
 
 	it 'offers default settings' do
-		s.default_settings.should be_true
+		s.default_settings.should_not be_nil
 	end
 	it 'responds to default settings' do
 		s.default_settings.each do |a|
 			s.should respond_to a[0]
-			puts a[0]
 		end
 	end
 	it 'responds false to non-existing settings' do

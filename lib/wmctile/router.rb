@@ -1,4 +1,4 @@
-class Wmctile::Router
+class Wmctile::Router < Wmctile::Class
 
 	def initialize
 		@settings = Wmctile::Settings.new
@@ -29,6 +29,11 @@ class Wmctile::Router
 			window = self.wm.find_window window
 		end
 	end
+	def get_active_window
+		win_id = self.cmd('wmctrl -a :ACTIVE: -v').split('Using window: ').last
+		Wmctile::Window.new win_id, @settings
+	end
+
 	def wm
 		@wm || @wm = Wmctile::WindowManager.new(@settings)
 	end

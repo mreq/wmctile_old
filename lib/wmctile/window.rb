@@ -1,10 +1,20 @@
-class Wmctile::Window
+class Wmctile::Window < Wmctile::Class
+	attr_accessor :id, :name, :title
+
 	def initialize win_string, settings
 		@settings = settings
 		@id = win_string[/0x[\d\w]{8}/]
-		after_id_and_workspace = win_string[14..-1].split(/\s+#{ @settings.hostname }\s+/, 2)
-		@name = after_id_and_workspace[0]
-		@title = after_id_and_workspace[1]
+		self.get_name_and_title win_string
+	end
+	def get_name_and_title win_string
+		if win_string == @id
+			@name = ''
+			@title = ''
+		else
+			after_id_and_workspace = win_string[14..-1].split(/\s+#{ @settings.hostname }\s+/, 2)
+			@name = after_id_and_workspace[0]
+			@title = after_id_and_workspace[1]
+		end
 	end
 	def dmenu_item
 		unless @dmenu_item
@@ -19,8 +29,8 @@ class Wmctile::Window
 	def set_name_length name_length
 		@name += ' '*(name_length - @name.length + 3)
 	end
-	def wmctrl wm_cmd
-		wmctrl @id, wm_cmd
+	def wmctrl wm_cmd, summon
+		self.cmd "wmctrl -i#{ summon ? 'R' : 'r' } #{ @id } #{ wm_cmd }"
 	end
 	def move how_to_move
 		a = $default_movement

@@ -1,6 +1,6 @@
 require 'yaml'
 
-class Wmctile::Settings
+class Wmctile::Settings < Wmctile::Class
 	def method_missing sym, *args, &block
 		return false
 	end
@@ -33,7 +33,7 @@ class Wmctile::Settings
 		{
 			:window_border => 1,
 			:panel_height => 24,
-			:hostname => cmd('hostname')[0..-2]
+			:hostname => self.cmd('hostname')
 		}
 	end
 end

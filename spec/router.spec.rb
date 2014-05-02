@@ -25,6 +25,9 @@ describe 'Router' do
 	it 'uses a single window tiler instance' do
 		r.wt.should be r.wt
 	end
+	# it 'is able to get the active window' do
+	# 	r.get_active_window.should be_kind_of Wmctile::Window
+	# end
 
 	describe 'snap method' do
 		# snap
