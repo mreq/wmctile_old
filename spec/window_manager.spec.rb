@@ -6,7 +6,7 @@ describe 'WindowManager' do
 		# override dmenu for testing
 		class Wmctile::WindowManagerRspec < Wmctile::WindowManager
 			def dmenu items
-				items.first
+				items.first.value
 			end
 		end
 	end
@@ -25,6 +25,19 @@ describe 'WindowManager' do
 		wm.width(0.5).should eq wm.instance_variable_get(:@w).to_f/2
 		wm.height(1).should eq wm.instance_variable_get(:@h)
 		wm.height(0.5).should eq wm.instance_variable_get(:@h).to_f/2
+	end
+
+	it 'is able to find a window' do
+		router = Wmctile::Router.new
+		active_win = router.get_active_window
+		found_win = wm.find_window(active_win.get_name)
+		
+		found_win.instance_variable_get(:@id).should eq active_win.instance_variable_get(:@id)
+		found_win.get_name.should eq active_win.get_name
+	end
+
+	it 'is able to ask for a window' do
+		wm.ask_for_window.should be_kind_of Wmctile::Window
 	end
 
 	describe 'window list' do

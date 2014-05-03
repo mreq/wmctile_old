@@ -19,7 +19,7 @@ class Wmctile::Window < Wmctile::Class
 	end
 	def dmenu_item
 		unless @dmenu_item
-			str = "#{ @id }   #{ @name }#{ @title }"
+			str = "#{ @id } #{ @name } #{ @title }"
 			@dmenu_item = Dmenu::Item.new str, self
 		end
 		@dmenu_item
@@ -36,14 +36,14 @@ class Wmctile::Window < Wmctile::Class
 	def set_name_length name_length
 		@name += ' '*(name_length - @name.length)
 	end
-	def wmctrl wm_cmd, summon = false
+	def wmctrl wm_cmd = '', summon = false
 		self.cmd "wmctrl -i#{ summon ? 'R' : 'r' } #{ @id } #{ wm_cmd }"
 		return self # return self so that commands can be chained
 	end
 	def move how_to_move = {}
 		how_to_move = @default_movement.merge! how_to_move
-		cmd = "-e 0,#{ how_to_move[:x] },#{ how_to_move[:y] },#{ how_to_move[:width] },#{ how_to_move[:height] }"
-		self.unshade().wmctrl(cmd)
+		cmd = "-e 0,#{ how_to_move[:x] },#{ how_to_move[:y] },#{ how_to_move[:width] },#{ how_to_move[:height] } -b remove,shaded"
+		self.wmctrl cmd
 	end
 	def shade
 		self.wmctrl '-b add,shaded'
@@ -52,6 +52,6 @@ class Wmctile::Window < Wmctile::Class
 		self.wmctrl '-b remove,shaded'
 	end
 	def summon
-		self.wmctrl '', true
+		self.wmctrl '-b remove,shaded', true
 	end
 end

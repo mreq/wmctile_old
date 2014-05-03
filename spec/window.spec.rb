@@ -37,7 +37,7 @@ describe 'Window' do
 	end
 
 	it 'returns itself in manipulation methods' do
-		[:move, :shade, :unshade].each do |m|
+		[:move, :shade, :unshade, :wmctrl].each do |m|
 			w.send(m).should be w
 		end
 	end
@@ -49,11 +49,21 @@ describe 'Window' do
 		it 'uses one dmenu item over again' do
 			w.dmenu_item.should be w.dmenu_item
 		end
+		it 'creates a string for dmenu' do
+			w.dmenu_item.key.should eq '0x06000004 terminator.Terminator petr@sova: ~/work/wmctile'
+		end
 	end
 
 	describe 'movement' do
-		it 'has default movement defined' do
+		it 'has defaults defined' do
 			w.instance_variable_get(:@default_movement).should_not be_nil
+		end
+		it 'uses the passed hash' do
+			how_to_move = { :x => 30, :y => 30 }
+			w.should_receive(:wmctrl) do |arg|
+				arg.match('-e 0,30,30').should_not be_nil
+			end
+			w.move how_to_move
 		end
 	end
 

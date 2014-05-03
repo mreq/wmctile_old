@@ -1,4 +1,4 @@
-class Wmctile::WindowManager < Wmctile::Class
+class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 	attr_accessor :w, :h, :windows
 
 	def initialize settings
@@ -10,7 +10,7 @@ class Wmctile::WindowManager < Wmctile::Class
 		dimensions = cmd("wmctrl -d | awk '{ print $9 }' | head -n1").split('x')
 		@w = dimensions[0].to_i - 2*@settings.window_border
 		@h = dimensions[1].to_i - 2*@settings.window_border
-		@workspace = cmd("wmctrl -d | grep '\*' | cut -d' ' -f 1").to_i
+		@workspace = cmd("wmctrl -d | grep '\*' | awk '{ print $1 }'").to_i
 	end
 	def width portion
 		@w * portion
@@ -20,12 +20,18 @@ class Wmctile::WindowManager < Wmctile::Class
 	end
 
 	def find_window window_string, current_workspace_only = true
-		puts "Finding window #{ window_string }."
+		cmd = "wmctrl -lx | grep -F #{ window_string }"
+		cmd += ' | grep -E \'0x\w+\s+' + @workspace.to_s + '\s+\''  if current_workspace_only
+		window_string = self.cmd cmd
+		window_string = window_string.split("\n").first
+		if window_string.nil?
+			return nil
+		else
+			return Wmctile::Window.new window_string, @settings
+		end
 	end
-	def ask_for_window
-		a = dmenu self.windows.map(&:dmenu_item)
-		puts a
-		a
+	def ask_for_window current_workspace_only = true
+		self.dmenu self.windows.map(&:dmenu_item)
 	end
 
 	def build_win_list current_workspace_only = true
