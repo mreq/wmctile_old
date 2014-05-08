@@ -22,6 +22,31 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 		@h * portion
 	end
 
+	def get_window window_str = nil, current_workspace_only = true
+		if window_str.nil?
+			window = self.ask_for_window current_workspace_only
+		else
+			if window_str == ':ACTIVE:'
+				window = self.get_active_window
+			else
+				window = self.find_window window_str, current_workspace_only
+				unless window
+					# does window_str have an icon bundle in it? (aka evince.Evince)
+					if window_str =~ /[a-z0-9]+\.[a-z0-9]+/i
+						icon = window_str.split('.').first
+					else
+						icon = nil
+					end
+					self.notify 'No window found', "#{ window_str }", icon
+				end
+			end
+		end
+		window
+	end
+	def get_active_window
+		win_id = self.cmd('wmctrl -a :ACTIVE: -v 2>&1').split('Using window: ').last
+		Wmctile::Window.new win_id, @settings
+	end
 	def find_window window_string, current_workspace_only = true
 		cmd = "wmctrl -lx | grep -F #{ window_string }"
 		cmd += ' | grep -E \'0x\w+\s+' + @workspace.to_s + '\s+\''  if current_workspace_only

@@ -16,34 +16,6 @@ class Wmctile::Router < Wmctile::Class
 		end
 	end
 	##################################
-	## window getters ################
-	##################################
-	def get_window window_str = nil, current_workspace_only = true
-		if window_str.nil?
-			window = self.wm.ask_for_window current_workspace_only
-		else
-			if window_str == ':ACTIVE:'
-				window = self.get_active_window
-			else
-				window = self.wm.find_window window_str, current_workspace_only
-				unless window
-					# does window_str have an icon bundle in it? (aka evince.Evince)
-					if window_str =~ /[a-z0-9]+\.[a-z0-9]+/i
-						icon = window_str.split('.').first
-					else
-						icon = nil
-					end
-					self.notify 'No window found', "#{ window_str }", icon
-				end
-			end	
-		end
-		window
-	end
-	def get_active_window
-		win_id = self.cmd('wmctrl -a :ACTIVE: -v 2>&1').split('Using window: ').last
-		Wmctile::Window.new win_id, @settings
-	end
-	##################################
 	## objects getter methods ########
 	##################################
 	def wm
@@ -56,23 +28,13 @@ class Wmctile::Router < Wmctile::Class
 		@memory || @memory = Wmctile::Memory.new
 	end
 	##################################
-	## various helpers ###############
-	##################################
-	def notify title, string, icon = nil
-		if icon
-			system "notify-send -i '#{ icon }' '#{title}' '#{string}'"
-		else	
-			system "notify-send '#{title}' '#{string}'"
-		end
-	end
-	##################################
 	## actual command-line methods ###
 	##################################
 	def help args = nil
 		puts 'help'
 	end
 	def summon window_str
-		window = self.get_window window_str, false
+		window = self.wm.get_window window_str, false
 		if window
 			window.summon
 			return true
@@ -81,7 +43,7 @@ class Wmctile::Router < Wmctile::Class
 		end
 	end
 	def summon_in_workspace window_str
-		window = self.get_window window_str, true
+		window = self.wm.get_window window_str, true
 		if window
 			window.summon
 			return true
@@ -100,19 +62,19 @@ class Wmctile::Router < Wmctile::Class
 		end
 	end
 	def maximize window_str
-		window = self.get_window window_str
+		window = self.wm.get_window window_str
 		if window
 			window.maximize
 		end
 	end
 	def unmaximize window_str
-		window = self.get_window window_str
+		window = self.wm.get_window window_str
 		if window
 			window.unmaximize
 		end
 	end
 	def shade window_str
-		window = self.get_window window_str
+		window = self.wm.get_window window_str
 		if window
 			window.shade
 			self.memory.set self.wm.workspace, 'shade', {
@@ -121,7 +83,7 @@ class Wmctile::Router < Wmctile::Class
 		end
 	end
 	def unshade window_str
-		window = self.get_window window_str
+		window = self.wm.get_window window_str
 		if window
 			window.unshade
 			self.memory.set self.wm.workspace, 'unshade', {
@@ -140,7 +102,7 @@ class Wmctile::Router < Wmctile::Class
 		end
 	end
 	def snap where = 'left', window_str = nil, portion = 0.5
-		window = self.get_window window_str
+		window = self.wm.get_window window_str
 		if window
 			how_to_move = self.wm.calculate_snap where, portion.to_f
 			if how_to_move
@@ -153,7 +115,7 @@ class Wmctile::Router < Wmctile::Class
 	end
 	def resize where = 'left', portion = 0.01
 		portion = portion.to_f
-		# what are we moving? the last from these:
+		# what are we moving? the last one used from these:
 		methods = ['snap']
 		freshest_meth = nil
 		freshest_time = 0

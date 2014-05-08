@@ -27,7 +27,7 @@ describe 'WindowManager' do
 
 	it 'is able to find a window' do
 		router = Wmctile::Router.new
-		active_win = router.get_active_window
+		active_win = wm.get_active_window
 		found_win = wm.find_window(active_win.get_name)
 		
 		found_win.id.should eq active_win.id
@@ -58,6 +58,17 @@ describe 'WindowManager' do
 	describe 'size calculation' do
 		it 'can calculate snap' do
 			wm.calculate_snap('left').should be_kind_of Hash
+		end
+	end
+
+	describe 'notifications' do
+		it 'makes a notification when no window is found' do
+			wm.should_receive :notify
+			wm.get_window 'loremipsum123456'
+		end
+		it 'uses an app icon when possible' do
+			wm.should_receive(:notify).with 'No window found', 'evince.loremipsum123456', 'evince'
+			wm.get_window 'evince.loremipsum123456'
 		end
 	end
 end

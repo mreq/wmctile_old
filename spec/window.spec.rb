@@ -9,30 +9,30 @@ describe 'Window' do
 
 	describe 'init' do
 		it 'extracts id from string' do
-			w.instance_variable_get(:@id).should eq '0x12345678'
-			w.instance_variable_get(:@name).should eq 'terminator.Terminator'
-			w.instance_variable_get(:@title).should eq 'petr@sova: ~/work/wmctile'
+			w.id.should eq '0x12345678'
+			w.name.should eq 'terminator.Terminator'
+			w.title.should eq 'petr@sova: ~/work/wmctile'
 		end
 		it 'handles being passed an id only' do
 			ww = Wmctile::Window.new '0x12345678', Wmctile::Settings.new
-			ww.instance_variable_get(:@id).should eq '0x12345678'
-			ww.instance_variable_get(:@name).should eq ''
-			ww.instance_variable_get(:@title).should eq ''
+			ww.id.should eq '0x12345678'
+			ww.name.should eq ''
+			ww.title.should eq ''
 		end	
 	end
 
 	it 'appends whitespace to the name' do
-		name = w.instance_variable_get(:@name)
+		name = w.name
 		w.set_name_length 40
-		new_name = w.instance_variable_get(:@name)
+		new_name = w.name
 		new_name.length.should eq 40
 		new_name.should eq (name + ' '*(40 - name.length))
 	end
 
 	it 'is able to find it\'s name when initialized from id' do
 		router = Wmctile::Router.new
-		active_win = router.get_active_window
-		active_win.instance_variable_get(:@name).should eq ''
+		active_win = router.wm.get_active_window
+		active_win.name.should eq ''
 		active_win.get_name.should_not eq ''
 	end
 

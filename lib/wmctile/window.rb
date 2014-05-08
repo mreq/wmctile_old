@@ -1,5 +1,5 @@
 class Wmctile::Window < Wmctile::Class
-	attr_accessor :id, :name, :title
+	attr_accessor :id, :name, :title, :default_movement
 
 	def initialize win_string, settings
 		@default_movement = { :x => 0, :y => 0, :width => '-1', :height => '-1' }
