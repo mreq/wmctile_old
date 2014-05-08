@@ -7,7 +7,8 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 	end
 
 	def init_dimensions
-		dimensions = cmd("wmctrl -d | awk '{ print $9 }' | head -n1").split('x')
+		# dimensions = cmd("wmctrl -d | awk '{ print $9 }' | head -n1").split('x')
+		dimensions = cmd("xrandr | grep -E '\sconnected\s[0-9]+x[0-9]+\+0' | awk '{print $3}' | awk -F'+' '{print $1}'").split('x')
 		@w = dimensions[0].to_i - 2*@settings.window_border
 		@h = dimensions[1].to_i - 2*@settings.window_border - @settings.panel_height
 		@workspace = cmd("wmctrl -d | grep '\*' | awk '{ print $1 }'").to_i

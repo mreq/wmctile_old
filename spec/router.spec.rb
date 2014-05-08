@@ -106,4 +106,9 @@ describe 'Router' do
 			r.memory.get(wsp, 'unshade', 'window_id').should eq id
 		end
 	end
+	describe 'resize method' do
+		it 'has a resize method' do
+			r.should respond_to :resize
+		end
+	end
 end

@@ -71,18 +71,6 @@ class Wmctile::Router < Wmctile::Class
 	def help args = nil
 		puts 'help'
 	end
-	def snap where = 'left', window_str = nil, portion = 0.5
-		window = self.get_window window_str
-		if window
-			how_to_move = self.wm.calculate_snap where, portion.to_f
-			if how_to_move
-				window.move how_to_move
-				self.memory.set self.wm.workspace, 'snap', {
-					'where' => where, 'portion' => portion, 'window_id' => window.id
-				}
-			end
-		end
-	end
 	def summon window_str
 		window = self.get_window window_str, false
 		if window
@@ -150,6 +138,37 @@ class Wmctile::Router < Wmctile::Class
 				'window_id' => window.id
 			}
 		end
+	end
+	def snap where = 'left', window_str = nil, portion = 0.5
+		window = self.get_window window_str
+		if window
+			how_to_move = self.wm.calculate_snap where, portion.to_f
+			if how_to_move
+				window.move how_to_move
+				self.memory.set self.wm.workspace, 'snap', {
+					'where' => where, 'portion' => portion, 'window_id' => window.id
+				}
+			end
+		end
+	end
+	def resize where = 'left', portion = 0.01
+		# what are we moving? the last from these:
+		methods = ['snap']
+		freshest_meth = nil
+		freshest_time = 0
+		methods.each do |meth|
+			time = self.memory.get self.wm.workspace, meth, 'time'
+			if time > freshest_time
+				freshest_time = time
+				freshest_meth = meth
+			end
+		end
+		# ok, got it, it's freshest_meth
+		self.send "resize_#{ freshest_meth }", where, portion
+	end
+	def resize_snap where, portion
+		info = self.memory.get self.wm.workspace, 'snap'
+		self.snap where where, info['window_id'], info['portion']+portion
 	end
 
 end

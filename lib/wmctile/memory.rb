@@ -50,6 +50,7 @@ class Wmctile::Memory < Wmctile::Class
 		end
 	end
 	def set workspace = 0, key, hash
+		hash.merge! 'time' => Time.now.to_i
 		if @memory[workspace].nil?
 			@memory[workspace] = {}
 		end

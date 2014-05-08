@@ -9,22 +9,20 @@ describe 'WindowManager' do
 				items.first.value
 			end
 		end
-	end
-	before(:each) do
 		wm = Wmctile::WindowManagerRspec.new Wmctile::Settings.new
 	end
 
 	it 'gets dimensions and workspace number on init' do
-		wm.instance_variable_get(:@w).should be_kind_of Integer
-		wm.instance_variable_get(:@h).should be_kind_of Integer
-		wm.instance_variable_get(:@workspace).should be_kind_of Integer
+		wm.w.should be_kind_of Integer
+		wm.h.should be_kind_of Integer
+		wm.workspace.should be_kind_of Integer
 	end
 
 	it 'has width/height getters' do
-		wm.width(1).should eq wm.instance_variable_get(:@w)
-		wm.width(0.5).should eq wm.instance_variable_get(:@w).to_f/2
-		wm.height(1).should eq wm.instance_variable_get(:@h)
-		wm.height(0.5).should eq wm.instance_variable_get(:@h).to_f/2
+		wm.width(1).should eq wm.w
+		wm.width(0.5).should eq wm.w.to_f/2
+		wm.height(1).should eq wm.h
+		wm.height(0.5).should eq wm.h.to_f/2
 	end
 
 	it 'is able to find a window' do
@@ -32,7 +30,7 @@ describe 'WindowManager' do
 		active_win = router.get_active_window
 		found_win = wm.find_window(active_win.get_name)
 		
-		found_win.instance_variable_get(:@id).should eq active_win.instance_variable_get(:@id)
+		found_win.id.should eq active_win.id
 		found_win.get_name.should eq active_win.get_name
 	end
 

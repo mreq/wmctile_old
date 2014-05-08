@@ -20,13 +20,13 @@ describe 'Memory' do
 	it 'is able to write to file' do
 		path = m.instance_variable_get(:@path)
 		orig = File.mtime path
-		m.set 15, 'lorem', 'ipsum'
+		m.set 15, 'lorem', { 'ipsum' => 'dolor' }
 		sleep 0.01 # just to be sure
 		wrote = File.mtime path
 		# file time change
 		wrote.should > orig
 		# remember the value
 		mm = Wmctile::Memory.new
-		mm.get(15, 'lorem').should eq 'ipsum'
+		mm.get(15, 'lorem', 'ipsum').should eq 'dolor'
 	end
 end
