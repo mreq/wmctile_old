@@ -33,6 +33,7 @@ class Wmctile::Settings < Wmctile::Class
 		{
 			:window_border => 1,
 			:panel_height => 24,
+			:panel_width => 0,
 			:hostname => self.cmd('hostname')
 		}
 	end

@@ -73,7 +73,7 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 		return case where
 		when 'left'
 			{
-				:x => 0, :y => @settings.panel_height,
+				:x => @settings.panel_width, :y => @settings.panel_height,
 				:height => self.height, :width => self.width(0.5)
 			}
 		when 'right'
@@ -83,12 +83,12 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 			}
 		when 'top'
 			{
-				:x => 0, :y => @settings.panel_height,
+				:x => @settings.panel_width, :y => @settings.panel_height,
 				:height => self.height(0.5), :width => self.width
 			}
 		when 'bottom'
 			{
-				:x => 0, :y => @settings.panel_height + self.height(0.5),
+				:x => @settings.panel_width, :y => @settings.panel_height + self.height(0.5),
 				:height => self.height(0.5), :width => self.width
 			}
 		else
