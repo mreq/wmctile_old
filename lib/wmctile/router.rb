@@ -152,6 +152,7 @@ class Wmctile::Router < Wmctile::Class
 		end
 	end
 	def resize where = 'left', portion = 0.01
+		portion = portion.to_f
 		# what are we moving? the last from these:
 		methods = ['snap']
 		freshest_meth = nil
@@ -166,9 +167,50 @@ class Wmctile::Router < Wmctile::Class
 		# ok, got it, it's freshest_meth
 		self.send "resize_#{ freshest_meth }", where, portion
 	end
-	def resize_snap where, portion
+	def resize_snap where = 'left', portion = 0.01
+		portion = portion.to_f
 		info = self.memory.get self.wm.workspace, 'snap'
-		self.snap where where, info['window_id'], info['portion']+portion
+		if info.nil?
+			return nil
+		end
+		negative = case info['where']
+		when 'left'
+			if where == 'left'	
+				true
+			elsif where == 'right'
+				false
+			else
+				nil
+			end
+		when 'right'
+			if where == 'left'	
+				false
+			elsif where == 'right'
+				true
+			else
+				nil
+			end
+		when 'top'
+			if where == 'bottom'	
+				false
+			elsif where == 'top'
+				true
+			else
+				nil
+			end
+		when 'bottom'
+			if where == 'top'	
+				false
+			elsif where == 'bottom'
+				true
+			else
+				nil
+			end
+		end
+		unless negative.nil?
+			portion = -portion  if negative
+			self.snap where, info['window_id'], info['portion']+portion
+		end
 	end
 
 end

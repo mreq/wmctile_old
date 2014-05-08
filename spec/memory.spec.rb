@@ -21,7 +21,7 @@ describe 'Memory' do
 		path = m.instance_variable_get(:@path)
 		orig = File.mtime path
 		m.set 15, 'lorem', { 'ipsum' => 'dolor' }
-		sleep 0.01 # just to be sure
+		sleep 0.05 # just to be sure
 		wrote = File.mtime path
 		# file time change
 		wrote.should > orig

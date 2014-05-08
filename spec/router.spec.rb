@@ -110,5 +110,21 @@ describe 'Router' do
 		it 'has a resize method' do
 			r.should respond_to :resize
 		end
+		describe 'resize_snap method' do
+			it 'gets the correct direction/sign' do
+				# make a snap to resize later
+				r.snap 'left', 'terminator.Terminator', 0.5
+				p = r.memory.get r.wm.workspace, 'snap', 'portion'
+				p.should eq	0.5
+				r.resize_snap 'left', 0.01
+				np = r.memory.get r.wm.workspace, 'snap', 'portion'
+				np.should eq 0.49
+				r.resize_snap 'right', 0.1
+				nnp = r.memory.get r.wm.workspace, 'snap', 'portion'
+				nnp.should eq 0.59
+				# restore my poor terminal
+				r.maximize 'terminator.Terminator'
+			end
+		end
 	end
 end
