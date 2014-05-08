@@ -56,4 +56,10 @@ describe 'WindowManager' do
 			all_windows.length.should be >= workspace_windows.length
 		end
 	end
+
+	describe 'size calculation' do
+		it 'can calculate snap' do
+			wm.calculate_snap('left').should be_kind_of Hash
+		end
+	end
 end

@@ -9,13 +9,13 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 	def init_dimensions
 		dimensions = cmd("wmctrl -d | awk '{ print $9 }' | head -n1").split('x')
 		@w = dimensions[0].to_i - 2*@settings.window_border
-		@h = dimensions[1].to_i - 2*@settings.window_border
+		@h = dimensions[1].to_i - 2*@settings.window_border - @settings.panel_height
 		@workspace = cmd("wmctrl -d | grep '\*' | awk '{ print $1 }'").to_i
 	end
-	def width portion
+	def width portion = 1
 		@w * portion
 	end
-	def height portion
+	def height portion = 1
 		@h * portion
 	end
 
@@ -66,6 +66,33 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 			self.build_win_list current_workspace_only
 		else
 			instance_variable_get(variable_name)
+		end
+	end
+
+	def calculate_snap where
+		return case where
+		when 'left'
+			{
+				:x => 0, :y => @settings.panel_height,
+				:height => self.height, :width => self.width(0.5)
+			}
+		when 'right'
+			{
+				:x => self.width(0.5), :y => @settings.panel_height,
+				:height => self.height, :width => self.width(0.5)
+			}
+		when 'top'
+			{
+				:x => 0, :y => @settings.panel_height,
+				:height => self.height(0.5), :width => self.width
+			}
+		when 'bottom'
+			{
+				:x => 0, :y => @settings.panel_height + self.height(0.5),
+				:height => self.height(0.5), :width => self.width
+			}
+		else
+			nil
 		end
 	end
 end

@@ -38,11 +38,14 @@ class Wmctile::Window < Wmctile::Class
 	end
 	def wmctrl wm_cmd = '', summon = false
 		self.cmd "wmctrl -i#{ summon ? 'R' : 'r' } #{ @id } #{ wm_cmd }"
+		puts "wmctrl -i#{ summon ? 'R' : 'r' } #{ @id } #{ wm_cmd }"
 		return self # return self so that commands can be chained
 	end
 	def move how_to_move = {}
 		how_to_move = @default_movement.merge! how_to_move
-		cmd = "-e 0,#{ how_to_move[:x] },#{ how_to_move[:y] },#{ how_to_move[:width] },#{ how_to_move[:height] } -b remove,shaded"
+		cmd = "-e 0,#{ how_to_move[:x].to_i },#{ how_to_move[:y].to_i },#{ how_to_move[:width].to_i },#{ how_to_move[:height].to_i }"
+		self.unshade
+		self.unmaximize
 		self.wmctrl cmd
 	end
 	def shade
@@ -52,6 +55,12 @@ class Wmctile::Window < Wmctile::Class
 		self.wmctrl '-b remove,shaded'
 	end
 	def summon
-		self.wmctrl '-b remove,shaded', true
+		self.wmctrl '', true
+	end
+	def maximize
+		self.wmctrl '-b add,maximized_vert,maximized_horz'
+	end
+	def unmaximize
+		self.wmctrl '-b remove,maximized_vert,maximized_horz'
 	end
 end

@@ -16,18 +16,37 @@ class Wmctile::Router < Wmctile::Class
 		puts 'help'
 		'help'
 	end
-	def snap where = 'left', window = nil
-		puts 'called snap'
-		window = get_window window
-		window.snap where  unless window.nil?
+	def snap where = 'left', window_str = nil
+		if window_str == ':ACTIVE:'
+			window = self.get_active_window
+		else
+			window = self.get_window window_str
+		end
+		if window
+			how_to_move = self.wm.calculate_snap where
+			window.move how_to_move  if how_to_move
+		end
+	end
+	def summon window_str
+		window = self.get_window window_str, false
+		if window
+			window.summon
+		end
+	end
+	def summon_in_workspace window_str
+		window = self.get_window window_str, true
+		if window
+			window.summon
+		end
 	end
 
-	def get_window window = nil
-		if window.nil?
-			window = self.wm.ask_for_window
+	def get_window window_str = nil, current_workspace_only = true
+		if window_str.nil?
+			window = self.wm.ask_for_window current_workspace_only
 		else
-			window = self.wm.find_window window
+			window = self.wm.find_window window_str, current_workspace_only
 		end
+		window
 	end
 	def get_active_window
 		win_id = self.cmd('wmctrl -a :ACTIVE: -v 2>&1').split('Using window: ').last

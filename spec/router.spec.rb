@@ -34,6 +34,21 @@ describe 'Router' do
 		it 'has a snap method' do
 			r.should respond_to :snap		
 		end
-
+		it 'uses wm to calculate the snap' do
+			r.wm.should_receive(:calculate_snap).with 'left'
+			r.snap 'left', r.get_active_window.instance_variable_get(:@id)
+		end
+	end
+	describe 'summon method' do
+		it 'searches for a window' do
+			r.should_receive(:get_window).with 'loremipsum123456', false
+			r.summon 'loremipsum123456'
+		end
+	end
+	describe 'summon_in_workspace method' do
+		it 'searches for a window' do
+			r.should_receive(:get_window).with 'loremipsum123456', true
+			r.summon_in_workspace 'loremipsum123456'
+		end
 	end
 end
