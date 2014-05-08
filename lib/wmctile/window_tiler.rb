@@ -1,17 +1,24 @@
 class Wmctile::WindowTiler < Wmctile::Class
+	##################################
+	## init ##########################
+	##################################
 	def initialize settings, memory, wm = nil
 		@settings = settings
 		@memory = memory
 		@wm = wm
 	end
-
+	##################################
+	## object getter methods #########
+	##################################
 	def wm
 		@wm || @wm = Wmctile::WindowManager.new(@settings)
 	end
 	def memory
 		@memory || @memory = Wmctile::Memory.new
 	end
-
+	##################################
+	## actual snapping methods #######
+	##################################
 	def snap where = 'left', window_str = nil, portion = 0.5
 		window = self.wm.get_window window_str
 		if window

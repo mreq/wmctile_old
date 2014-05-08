@@ -1,11 +1,12 @@
 class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 	attr_accessor :w, :h, :workspace, :windows
-
+	##################################
+	## init ##########################
+	##################################
 	def initialize settings
 		@settings = settings
 		self.init_dimensions
 	end
-
 	def init_dimensions
 		# legacy (but fast) method via wmctrl
 		# dimensions = cmd("wmctrl -d | awk '{ print $9 }' | head -n1").split('x')
@@ -15,13 +16,18 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 		@h = dimensions[1].to_i - 2*@settings.window_border - @settings.panel_height
 		@workspace = cmd("wmctrl -d | grep '\*' | awk '{ print $1 }'").to_i
 	end
+	##################################
+	## dimension getters #############
+	##################################
 	def width portion = 1
 		@w * portion
 	end
 	def height portion = 1
 		@h * portion
 	end
-
+	##################################
+	## window getters ################
+	##################################
 	def get_window window_str = nil, current_workspace_only = true
 		if window_str.nil?
 			window = self.ask_for_window current_workspace_only
@@ -61,7 +67,9 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 	def ask_for_window current_workspace_only = true
 		self.dmenu self.windows.map(&:dmenu_item)
 	end
-
+	##################################
+	## window lists ##################
+	##################################
 	def build_win_list current_workspace_only = true
 		if current_workspace_only
 			variable_name = '@windows_on_workspace'
@@ -96,7 +104,9 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 			instance_variable_get(variable_name)
 		end
 	end
-
+	##################################
+	## window size calculators #######
+	##################################
 	def calculate_snap where, portion = 0.5
 		return case where
 		when 'left'

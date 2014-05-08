@@ -16,7 +16,7 @@ class Wmctile::Router < Wmctile::Class
 		end
 	end
 	##################################
-	## objects getter methods ########
+	## object getter methods #########
 	##################################
 	def wm
 		@wm || @wm = Wmctile::WindowManager.new(@settings)
