@@ -44,13 +44,16 @@ class Wmctile::Router < Wmctile::Class
 		Wmctile::Window.new win_id, @settings
 	end
 	##################################
-	## window manager/tiler methods ##
+	## objects getter methods ########
 	##################################
 	def wm
 		@wm || @wm = Wmctile::WindowManager.new(@settings)
 	end
 	def wt
 		@wt || @wt = Wmctile::WindowTiler.new(@settings)
+	end
+	def memory
+		@memory || @memory = Wmctile::Memory.new
 	end
 	##################################
 	## various helpers ###############

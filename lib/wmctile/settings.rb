@@ -6,11 +6,11 @@ class Wmctile::Settings < Wmctile::Class
 	end
 
 	def initialize
-		path = File.expand_path '~/.config/wmctile/wmctile.yml'
+		path = File.expand_path '~/.config/wmctile/wmctile-settings.yml'
 		if not File.exist? path
 			raw_settings = self.create_new_settings path
 		end
-		raw_settings = File.read path
+		raw_settings ||= File.read path
 		settings = YAML.load(raw_settings)
 		if settings
 			settings.each { |name, value|
@@ -21,7 +21,7 @@ class Wmctile::Settings < Wmctile::Class
 	end
 
 	def create_new_settings path
-		dir_path = path[/(.*)\/wmctile.yml/, 1]
+		dir_path = path[/(.*)\/wmctile-settings.yml/, 1]
 		if not Dir.exists? dir_path
 			Dir.mkdir dir_path
 		end
