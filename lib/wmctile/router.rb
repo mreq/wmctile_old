@@ -68,10 +68,10 @@ class Wmctile::Router < Wmctile::Class
 	def help args = nil
 		puts 'help'
 	end
-	def snap where = 'left', window_str = nil
+	def snap where = 'left', window_str = nil, portion = 0.5
 		window = self.get_window window_str
 		if window
-			how_to_move = self.wm.calculate_snap where
+			how_to_move = self.wm.calculate_snap where, portion.to_f
 			window.move how_to_move  if how_to_move
 		end
 	end

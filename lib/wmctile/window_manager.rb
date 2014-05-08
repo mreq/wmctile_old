@@ -69,27 +69,27 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 		end
 	end
 
-	def calculate_snap where
+	def calculate_snap where, portion = 0.5
 		return case where
 		when 'left'
 			{
 				:x => @settings.panel_width, :y => @settings.panel_height,
-				:height => self.height, :width => self.width(0.5)
+				:height => self.height, :width => self.width(portion)
 			}
 		when 'right'
 			{
-				:x => self.width(0.5), :y => @settings.panel_height,
-				:height => self.height, :width => self.width(0.5)
+				:x => self.width(portion), :y => @settings.panel_height,
+				:height => self.height, :width => self.width(1-portion)
 			}
 		when 'top'
 			{
 				:x => @settings.panel_width, :y => @settings.panel_height,
-				:height => self.height(0.5), :width => self.width
+				:height => self.height(portion), :width => self.width
 			}
 		when 'bottom'
 			{
-				:x => @settings.panel_width, :y => @settings.panel_height + self.height(0.5),
-				:height => self.height(0.5), :width => self.width
+				:x => @settings.panel_width, :y => @settings.panel_height + self.height(1-portion),
+				:height => self.height(portion), :width => self.width
 			}
 		else
 			nil

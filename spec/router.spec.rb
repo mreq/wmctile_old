@@ -45,8 +45,12 @@ describe 'Router' do
 			r.should respond_to :snap
 		end
 		it 'uses wm to calculate the snap' do
-			r.wm.should_receive(:calculate_snap).with 'left'
+			r.wm.should_receive(:calculate_snap).with 'left', 0.5
 			r.snap 'left', r.get_active_window.instance_variable_get(:@id)
+		end
+		it 'accepts a portion of screen' do
+			r.wm.should_receive(:calculate_snap).with 'left', 0.3
+			r.snap 'left', r.get_active_window.instance_variable_get(:@id), 0.3
 		end
 	end
 	describe 'summon method' do
