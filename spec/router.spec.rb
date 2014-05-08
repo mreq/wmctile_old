@@ -51,4 +51,24 @@ describe 'Router' do
 			r.summon_in_workspace 'loremipsum123456'
 		end
 	end
+	describe 'summon_or_run method' do
+		it 'uses summon' do
+			r.should_receive :summon
+			r.summon_or_run 'loremipsum123456', 'echo TEST'
+		end
+		it 'runs a command when a window is not found' do
+			r.should_receive(:cmd).with 'echo TEST > /dev/null &'
+			r.summon_or_run 'loremipsum123456', 'echo TEST'
+		end
+	end
+	describe 'summon_in_workspace_or_run method' do
+		it 'uses summon_in_workspace' do
+			r.should_receive :summon_in_workspace
+			r.summon_in_workspace_or_run 'loremipsum123456', 'echo TEST'
+		end
+		it 'runs a command when a window is not found' do
+			r.should_receive(:cmd).with 'echo TEST > /dev/null &'
+			r.summon_in_workspace_or_run 'loremipsum123456', 'echo TEST'
+		end
+	end
 end

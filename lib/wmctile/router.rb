@@ -31,12 +31,26 @@ class Wmctile::Router < Wmctile::Class
 		window = self.get_window window_str, false
 		if window
 			window.summon
+			return true
 		end
+		return false
 	end
 	def summon_in_workspace window_str
 		window = self.get_window window_str, true
 		if window
 			window.summon
+			return true
+		end
+		return false
+	end
+	def summon_or_run window_str, cmd_to_run
+		unless self.summon window_str
+			self.cmd "#{ cmd_to_run } > /dev/null &"
+		end
+	end
+	def summon_in_workspace_or_run window_str, cmd_to_run
+		unless self.summon_in_workspace window_str
+			self.cmd "#{ cmd_to_run } > /dev/null &"
 		end
 	end
 
