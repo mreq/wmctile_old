@@ -1,9 +1,13 @@
 class Wmctile::Router < Wmctile::Class
-
+	##################################
+	## init ##########################
+	##################################
 	def initialize
 		@settings = Wmctile::Settings.new
 	end
-
+	##################################
+	## main dispatch method ##########
+	##################################
 	def dispatch args = []
 		if args[0] and args[0] != 'dispatch' and self.respond_to? args[0]
 			self.send args[0], *args.drop(1)
@@ -11,17 +15,61 @@ class Wmctile::Router < Wmctile::Class
 			self.help
 		end
 	end
-
+	##################################
+	## window getters ################
+	##################################
+	def get_window window_str = nil, current_workspace_only = true
+		if window_str.nil?
+			window = self.wm.ask_for_window current_workspace_only
+		else
+			if window_str == ':ACTIVE:'
+				window = self.get_active_window
+			else
+				window = self.wm.find_window window_str, current_workspace_only
+				unless window
+					# does window_str have an icon bundle in it? (aka evince.Evince)
+					if window_str =~ /[a-z0-9]+\.[a-z0-9]+/i
+						icon = window_str.split('.').first
+					else
+						icon = nil
+					end
+					self.notify 'No window found', "#{ window_str }", icon
+				end
+			end	
+		end
+		window
+	end
+	def get_active_window
+		win_id = self.cmd('wmctrl -a :ACTIVE: -v 2>&1').split('Using window: ').last
+		Wmctile::Window.new win_id, @settings
+	end
+	##################################
+	## window manager/tiler methods ##
+	##################################
+	def wm
+		@wm || @wm = Wmctile::WindowManager.new(@settings)
+	end
+	def wt
+		@wt || @wt = Wmctile::WindowTiler.new(@settings)
+	end
+	##################################
+	## various helpers ###############
+	##################################
+	def notify title, string, icon = nil
+		if icon
+			system "notify-send -i '#{ icon }' '#{title}' '#{string}'"
+		else	
+			system "notify-send '#{title}' '#{string}'"
+		end
+	end
+	##################################
+	## actual command-line methods ###
+	##################################
 	def help args = nil
 		puts 'help'
-		'help'
 	end
 	def snap where = 'left', window_str = nil
-		if window_str == ':ACTIVE:'
-			window = self.get_active_window
-		else
-			window = self.get_window window_str
-		end
+		window = self.get_window window_str
 		if window
 			how_to_move = self.wm.calculate_snap where
 			window.move how_to_move  if how_to_move
@@ -32,16 +80,18 @@ class Wmctile::Router < Wmctile::Class
 		if window
 			window.summon
 			return true
+		else
+			return false
 		end
-		return false
 	end
 	def summon_in_workspace window_str
 		window = self.get_window window_str, true
 		if window
 			window.summon
 			return true
+		else
+			return false
 		end
-		return false
 	end
 	def summon_or_run window_str, cmd_to_run
 		unless self.summon window_str
@@ -53,25 +103,24 @@ class Wmctile::Router < Wmctile::Class
 			self.cmd "#{ cmd_to_run } > /dev/null &"
 		end
 	end
-
-	def get_window window_str = nil, current_workspace_only = true
-		if window_str.nil?
-			window = self.wm.ask_for_window current_workspace_only
+	def maximize window_str
+		if window_str == ':ACTIVE:'
+			window = self.get_active_window
 		else
-			window = self.wm.find_window window_str, current_workspace_only
+			window = self.get_window window_str
 		end
-		window
+		if window
+			window.maximize
+		end
 	end
-	def get_active_window
-		win_id = self.cmd('wmctrl -a :ACTIVE: -v 2>&1').split('Using window: ').last
-		Wmctile::Window.new win_id, @settings
+	def unmaximize window_str
+		if window_str == ':ACTIVE:'
+			window = self.get_active_window
+		else
+			window = self.get_window window_str
+		end
+		if window
+			window.unmaximize
+		end
 	end
-
-	def wm
-		@wm || @wm = Wmctile::WindowManager.new(@settings)
-	end
-	def wt
-		@wt || @wt = Wmctile::WindowTiler.new(@settings)
-	end
-
 end

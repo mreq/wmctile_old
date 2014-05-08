@@ -28,11 +28,21 @@ describe 'Router' do
 	it 'is able to get the active window' do
 		r.get_active_window.should be_kind_of Wmctile::Window
 	end
+	describe 'notifications' do
+		it 'makes a notification when no window is found' do
+			r.should_receive :notify
+			r.get_window 'loremipsum123456'
+		end
+		it 'uses an app icon when possible' do
+			r.should_receive(:notify).with 'No window found', 'evince.loremipsum123456', 'evince'
+			r.get_window 'evince.loremipsum123456'
+		end
+	end
 
 	describe 'snap method' do
 		# snap
 		it 'has a snap method' do
-			r.should respond_to :snap		
+			r.should respond_to :snap
 		end
 		it 'uses wm to calculate the snap' do
 			r.wm.should_receive(:calculate_snap).with 'left'
@@ -69,6 +79,18 @@ describe 'Router' do
 		it 'runs a command when a window is not found' do
 			r.should_receive(:cmd).with 'echo TEST > /dev/null &'
 			r.summon_in_workspace_or_run 'loremipsum123456', 'echo TEST'
+		end
+	end
+	describe 'maximize method' do
+		it 'finds a window' do
+			r.should_receive :get_window
+			r.maximize 'loremipsum123456'
+		end
+	end
+	describe 'unmaximize method' do
+		it 'finds a window' do
+			r.should_receive :get_window
+			r.unmaximize 'loremipsum123456'
 		end
 	end
 end

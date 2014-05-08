@@ -38,7 +38,6 @@ class Wmctile::Window < Wmctile::Class
 	end
 	def wmctrl wm_cmd = '', summon = false
 		self.cmd "wmctrl -i#{ summon ? 'R' : 'r' } #{ @id } #{ wm_cmd }"
-		puts "wmctrl -i#{ summon ? 'R' : 'r' } #{ @id } #{ wm_cmd }"
 		return self # return self so that commands can be chained
 	end
 	def move how_to_move = {}
