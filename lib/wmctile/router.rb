@@ -75,7 +75,12 @@ class Wmctile::Router < Wmctile::Class
 		window = self.get_window window_str
 		if window
 			how_to_move = self.wm.calculate_snap where, portion.to_f
-			window.move how_to_move  if how_to_move
+			if how_to_move
+				window.move how_to_move
+				self.memory.set self.wm.workspace, 'snap', {
+					'where' => where, 'portion' => portion, 'window_id' => window.id
+				}
+			end
 		end
 	end
 	def summon window_str
@@ -107,23 +112,44 @@ class Wmctile::Router < Wmctile::Class
 		end
 	end
 	def maximize window_str
-		if window_str == ':ACTIVE:'
-			window = self.get_active_window
-		else
-			window = self.get_window window_str
-		end
+		window = self.get_window window_str
 		if window
 			window.maximize
 		end
 	end
 	def unmaximize window_str
-		if window_str == ':ACTIVE:'
-			window = self.get_active_window
-		else
-			window = self.get_window window_str
-		end
+		window = self.get_window window_str
 		if window
 			window.unmaximize
 		end
 	end
+	def shade window_str
+		window = self.get_window window_str
+		if window
+			window.shade
+			self.memory.set self.wm.workspace, 'shade', {
+				'window_id' => window.id
+			}
+		end
+	end
+	def unshade window_str
+		window = self.get_window window_str
+		if window
+			window.unshade
+			self.memory.set self.wm.workspace, 'unshade', {
+				'window_id' => window.id
+			}
+		end
+	end
+	def unshade_last_shaded
+		win_id = self.memory.get self.wm.workspace, 'shade', 'window_id'
+		window = Wmctile::Window.new win_id, @settings
+		if window
+			window.unshade
+			self.memory.set self.wm.workspace, 'unshade', {
+				'window_id' => window.id
+			}
+		end
+	end
+
 end

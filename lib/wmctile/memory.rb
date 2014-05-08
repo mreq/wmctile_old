@@ -25,7 +25,7 @@ class Wmctile::Memory < Wmctile::Class
 		out_file.close
 	end
 	def write_memory
-		out_file = File.new @path, 'w+'
+		out_file = File.new @path, 'w'
 		out_file.puts @memory.to_yaml
 		out_file.close
 	end
@@ -58,5 +58,6 @@ class Wmctile::Memory < Wmctile::Class
 		else
 			@memory[workspace].merge! key => hash
 		end
+		self.write_memory
 	end
 end

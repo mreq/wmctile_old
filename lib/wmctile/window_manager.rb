@@ -1,5 +1,5 @@
 class Wmctile::WindowManager < Wmctile::ClassWithDmenu
-	attr_accessor :w, :h, :windows
+	attr_accessor :w, :h, :workspace, :windows
 
 	def initialize settings
 		@settings = settings

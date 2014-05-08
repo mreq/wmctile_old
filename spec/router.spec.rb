@@ -97,4 +97,13 @@ describe 'Router' do
 			r.unmaximize 'loremipsum123456'
 		end
 	end
+	describe 'shade/unshade methods' do
+		it 'is able to unshade last shaded window via memory' do
+			wsp = r.wm.workspace
+			r.shade 'terminator.Terminator'
+			id = r.memory.get wsp, 'shade', 'window_id'
+			r.unshade_last_shaded
+			r.memory.get(wsp, 'unshade', 'window_id').should eq id
+		end
+	end
 end
