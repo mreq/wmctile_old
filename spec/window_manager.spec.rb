@@ -48,8 +48,8 @@ describe 'WindowManager' do
 			wm.build_win_list.should be wm.build_win_list
 		end
 		it 'filters workspaces' do
-			all_windows = wm.build_win_list(false)
-			workspace_windows = wm.build_win_list(true)
+			all_windows = wm.build_win_list(true)
+			workspace_windows = wm.build_win_list(false)
 
 			all_windows.length.should be >= workspace_windows.length
 		end

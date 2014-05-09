@@ -28,14 +28,14 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 	##################################
 	## window getters ################
 	##################################
-	def get_window window_str = nil, current_workspace_only = true
+	def get_window window_str = nil, all_workspaces = false
 		if window_str.nil?
-			window = self.ask_for_window current_workspace_only
+			window = self.ask_for_window all_workspaces
 		else
 			if window_str == ':ACTIVE:'
 				window = self.get_active_window
 			else
-				window = self.find_window window_str, current_workspace_only
+				window = self.find_window window_str, all_workspaces
 				unless window
 					# does window_str have an icon bundle in it? (aka evince.Evince)
 					if window_str =~ /[a-z0-9]+\.[a-z0-9]+/i
@@ -53,9 +53,9 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 		win_id = self.cmd('wmctrl -a :ACTIVE: -v 2>&1').split('Using window: ').last
 		Wmctile::Window.new win_id, @settings
 	end
-	def find_window window_string, current_workspace_only = true
+	def find_window window_string, all_workspaces = false
 		cmd = "wmctrl -lx | grep -F #{ window_string }"
-		cmd += ' | grep -E \'0x\w+\s+' + @workspace.to_s + '\s+\''  if current_workspace_only
+		cmd += ' | grep -E \'0x\w+\s+' + @workspace.to_s + '\s+\''  unless all_workspaces
 		window_string = self.cmd cmd
 		window_string = window_string.split("\n").first
 		if window_string.nil?
@@ -64,9 +64,9 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 			return Wmctile::Window.new window_string, @settings
 		end
 	end
-	def find_windows window_string, current_workspace_only = true
+	def find_windows window_string, all_workspaces = false
 		cmd = "wmctrl -lx | grep -F #{ window_string }"
-		cmd += ' | grep -E \'0x\w+\s+' + @workspace.to_s + '\s+\''  if current_workspace_only
+		cmd += ' | grep -E \'0x\w+\s+' + @workspace.to_s + '\s+\''  unless all_workspaces
 		window_strings = self.cmd cmd
 		window_strings = window_strings.split("\n")
 		if window_string.nil?
@@ -75,43 +75,47 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 			return window_strings.map { |w| Wmctile::Window.new w, @settings }
 		end
 	end
-	def find_in_windows window_string, current_workspace_only = true
-		windows = self.find_windows window_string, current_workspace_only
-		if windows
-			ids = windows.collect(&:id)
-			active_win = self.get_active_window
-			if ids.include? active_win.id
-				# cycle through the windows
-				i = ids.index active_win.id
-				# try the next one
-				if ids[i+1]
-					window = windows[i+1]
-				# fallback to the first one
+	def find_in_windows window_string, all_workspaces = false
+		if window_string.nil?
+			self.ask_for_window all_workspaces
+		else
+			windows = self.find_windows window_string, all_workspaces
+			if windows
+				ids = windows.collect(&:id)
+				active_win = self.get_active_window
+				if ids.include? active_win.id
+					# cycle through the windows
+					i = ids.index active_win.id
+					# try the next one
+					if ids[i+1]
+						window = windows[i+1]
+					# fallback to the first one
+					else
+						window = windows.first
+					end
 				else
+					# switch to the first one
 					window = windows.first
 				end
-			else
-				# switch to the first one
-				window = windows.first
+				return window
 			end
-			return window
+			return nil
 		end
-		return nil
 	end
-	def ask_for_window current_workspace_only = true
+	def ask_for_window all_workspaces = false
 		self.dmenu self.windows.map(&:dmenu_item)
 	end
 	##################################
 	## window lists ##################
 	##################################
-	def build_win_list current_workspace_only = true
-		if current_workspace_only
+	def build_win_list all_workspaces = false
+		unless all_workspaces
 			variable_name = '@windows_on_workspace'
 		else
 			variable_name = '@windows_all'
 		end
 		unless instance_variable_get(variable_name)
-			if current_workspace_only
+			unless all_workspaces
 				cmd = "wmctrl -lx | grep \" #{ @workspace } \""
 			else
 				cmd = "wmctrl -lx"
@@ -126,14 +130,14 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 		end
 		instance_variable_get(variable_name)
 	end
-	def windows current_workspace_only = true
-		if current_workspace_only
+	def windows all_workspaces = false
+		unless all_workspaces
 			variable_name = '@windows_on_workspace'
 		else
 			variable_name = '@windows_all'
 		end
 		unless instance_variable_get(variable_name)
-			self.build_win_list current_workspace_only
+			self.build_win_list all_workspaces
 		else
 			instance_variable_get(variable_name)
 		end

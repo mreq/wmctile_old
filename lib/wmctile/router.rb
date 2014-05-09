@@ -4,13 +4,27 @@ class Wmctile::Router < Wmctile::Class
 	##################################
 	def initialize
 		@settings = Wmctile::Settings.new
+		@all_workspaces = false
 	end
 	##################################
 	## main dispatch method ##########
 	##################################
 	def dispatch args = []
-		if args[0] and args[0] != 'dispatch' and self.respond_to? args[0]
-			self.send args[0], *args.drop(1)
+		if args.length
+			main_arg = args[0]
+			if main_arg == '--all-workspaces'
+				@all_workspaces = true
+				drop = 2
+				main_arg = args[1]
+			else
+				@all_workspaces = false
+				drop = 1
+			end
+			if main_arg and !['dispatch', 'initialize', 'wm', 'wt', 'memory'].inlcude? main_arg and self.respond_to? main_arg
+				self.send main_arg, *args.drop(drop)
+			else
+				self.help
+			end
 		else
 			self.help
 		end
@@ -35,16 +49,7 @@ class Wmctile::Router < Wmctile::Class
 		puts 'help'
 	end
 	def summon window_str
-		window = self.wm.find_in_windows window_str, false
-		if window
-			window.summon
-			return true
-		else
-			return false
-		end
-	end
-	def summon_in_workspace window_str
-		window = self.wm.find_in_windows window_str, true
+		window = self.wm.find_in_windows window_str, @all_workspaces
 		if window
 			window.summon
 			return true
@@ -57,22 +62,8 @@ class Wmctile::Router < Wmctile::Class
 			self.cmd "#{ cmd_to_run } > /dev/null &"
 		end
 	end
-	def summon_in_workspace_or_run window_str, cmd_to_run
-		unless self.summon_in_workspace window_str
-			self.cmd "#{ cmd_to_run } > /dev/null &"
-		end
-	end
 	def switch_to window_str
-		window = self.wm.find_in_windows window_str, false
-		if window
-			window.switch_to
-			return true
-		else
-			return false
-		end
-	end
-	def switch_to_in_workspace window_str
-		window = self.wm.find_in_windows window_str, true
+		window = self.wm.find_in_windows window_str, @all_workspaces
 		if window
 			window.switch_to
 			return true
@@ -82,11 +73,6 @@ class Wmctile::Router < Wmctile::Class
 	end
 	def switch_to_or_run window_str, cmd_to_run
 		unless self.switch_to window_str
-			self.cmd "#{ cmd_to_run } > /dev/null &"
-		end
-	end
-	def switch_to_in_workspace_or_run window_str, cmd_to_run
-		unless self.switch_to_in_workspace window_str
 			self.cmd "#{ cmd_to_run } > /dev/null &"
 		end
 	end
