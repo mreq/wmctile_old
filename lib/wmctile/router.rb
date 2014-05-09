@@ -47,7 +47,7 @@ class Wmctile::Router < Wmctile::Class
 	##################################
 	def help args = nil
 		puts <<-eos
-wmctile version 0.1.0
+wmctile version 0.1.2
 
 usage:
    wmctile [--option1, --option2, ...] <command> ['argument1', 'argument2', ...]
