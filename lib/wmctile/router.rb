@@ -35,7 +35,7 @@ class Wmctile::Router < Wmctile::Class
 		puts 'help'
 	end
 	def summon window_str
-		window = self.wm.get_window window_str, false
+		window = self.wm.find_in_windows window_str, false
 		if window
 			window.summon
 			return true
@@ -44,7 +44,7 @@ class Wmctile::Router < Wmctile::Class
 		end
 	end
 	def summon_in_workspace window_str
-		window = self.wm.get_window window_str, true
+		window = self.wm.find_in_windows window_str, true
 		if window
 			window.summon
 			return true
@@ -59,6 +59,34 @@ class Wmctile::Router < Wmctile::Class
 	end
 	def summon_in_workspace_or_run window_str, cmd_to_run
 		unless self.summon_in_workspace window_str
+			self.cmd "#{ cmd_to_run } > /dev/null &"
+		end
+	end
+	def switch_to window_str
+		window = self.wm.find_in_windows window_str, false
+		if window
+			window.switch_to
+			return true
+		else
+			return false
+		end
+	end
+	def switch_to_in_workspace window_str
+		window = self.wm.find_in_windows window_str, true
+		if window
+			window.switch_to
+			return true
+		else
+			return false
+		end
+	end
+	def switch_to_or_run window_str, cmd_to_run
+		unless self.switch_to window_str
+			self.cmd "#{ cmd_to_run } > /dev/null &"
+		end
+	end
+	def switch_to_in_workspace_or_run window_str, cmd_to_run
+		unless self.switch_to_in_workspace window_str
 			self.cmd "#{ cmd_to_run } > /dev/null &"
 		end
 	end

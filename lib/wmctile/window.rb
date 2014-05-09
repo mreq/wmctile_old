@@ -56,6 +56,10 @@ class Wmctile::Window < Wmctile::Class
 	def summon
 		self.wmctrl '', true
 	end
+	def switch_to
+		self.cmd "wmctrl -ia #{ @id }"
+		return self
+	end
 	def maximize
 		self.wmctrl '-b add,maximized_vert,maximized_horz'
 	end

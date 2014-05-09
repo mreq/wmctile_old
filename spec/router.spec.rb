@@ -42,20 +42,20 @@ describe 'Router' do
 	end
 	describe 'summon method' do
 		it 'searches for a window' do
-			r.wm.should_receive(:get_window).with 'loremipsum123456', false
+			r.wm.should_receive(:find_in_windows).with 'loremipsum123456', false
 			r.summon 'loremipsum123456'
 		end
 	end
 	describe 'summon_in_workspace method' do
 		it 'searches for a window' do
-			r.wm.should_receive(:get_window).with 'loremipsum123456', true
+			r.wm.should_receive(:find_in_windows).with 'loremipsum123456', true
 			r.summon_in_workspace 'loremipsum123456'
 		end
 	end
 	describe 'switch_to method' do
 		it 'searches for windows' do
-			r.wm.should_receive(:get_window).with 'loremipsum123456', false
-			r.summon 'loremipsum123456'
+			r.wm.should_receive(:find_in_windows).with 'loremipsum123456', false
+			r.switch_to 'loremipsum123456'
 		end
 	end
 	describe 'summon_or_run method' do

@@ -64,6 +64,40 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 			return Wmctile::Window.new window_string, @settings
 		end
 	end
+	def find_windows window_string, current_workspace_only = true
+		cmd = "wmctrl -lx | grep -F #{ window_string }"
+		cmd += ' | grep -E \'0x\w+\s+' + @workspace.to_s + '\s+\''  if current_workspace_only
+		window_strings = self.cmd cmd
+		window_strings = window_strings.split("\n")
+		if window_string.nil?
+			return nil
+		else
+			return window_strings.map { |w| Wmctile::Window.new w, @settings }
+		end
+	end
+	def find_in_windows window_string, current_workspace_only = true
+		windows = self.find_windows window_string, current_workspace_only
+		if windows
+			ids = windows.collect(&:id)
+			active_win = self.get_active_window
+			if ids.include? active_win.id
+				# cycle through the windows
+				i = ids.index active_win.id
+				# try the next one
+				if ids[i+1]
+					window = windows[i+1]
+				# fallback to the first one
+				else
+					window = windows.first
+				end
+			else
+				# switch to the first one
+				window = windows.first
+			end
+			return window
+		end
+		return nil
+	end
 	def ask_for_window current_workspace_only = true
 		self.dmenu self.windows.map(&:dmenu_item)
 	end
