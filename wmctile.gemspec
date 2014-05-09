@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
 	s.version     = '0.0.1'
 	s.date        = Time.now.strftime('%Y-%m-%d')
 	s.summary     = 'wmctile'
-	s.description = 'A simple window manager in a gem.'
+	s.description = 'Window manager\'s best friend in a gem.'
 	s.authors     = ['mreq']
 	s.email       = 'contact@petrmarek.eu'
 	s.files       = ['lib/wmctile.rb']
@@ -30,6 +30,6 @@ If you have that, run:
 
 wmctile help
 
-to show the available commands. Also be sure to check the detailed docs at http://mreq.eu.
+to show the available commands. Also be sure to check the detailed docs at http://mreq.github.io/wmctile/build/docs.
 	eos
 end
