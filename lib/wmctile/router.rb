@@ -20,7 +20,7 @@ class Wmctile::Router < Wmctile::Class
 				@all_workspaces = false
 				drop = 1
 			end
-			if main_arg and !['dispatch', 'initialize', 'wm', 'wt', 'memory'].inlcude? main_arg and self.respond_to? main_arg
+			if main_arg and !['dispatch', 'initialize', 'wm', 'wt', 'memory'].include? main_arg and self.respond_to? main_arg
 				self.send main_arg, *args.drop(drop)
 			else
 				self.help
@@ -46,7 +46,65 @@ class Wmctile::Router < Wmctile::Class
 	## actual command-line methods ###
 	##################################
 	def help args = nil
-		puts 'help'
+		puts <<-eos
+wmctile version 
+
+usage:
+   wmctile [--option1, --option2, ...] <command> ['argument1', 'argument2', ...]
+
+examples:
+   wmctile snap 'left' 'terminator'
+   wmctile summon --all-workspaces ':ACTIVE:'
+
+options:
+   --all-workspaces, -a
+      Use all workspaces when searching for windows. 
+
+commands:
+   summon 'window_string'
+      Summons a window matching 'window_str'.
+
+   summon_or_run 'window_string' 'command_to_run'
+      Summons a window matching 'window_string'. If no window is found, the 'command_to_run' is run.
+
+   switch_to 'window_string'
+      Switches to a window matching 'window_string'.
+
+   switch_to_or_run 'window_string' 'command_to_run'
+      Switches to a window matching 'window_string'. If no window is found, the 'command_to_run' is run.
+
+   maximize 'window_string'
+      Maximizes a window matching 'window_string'.
+
+   unmaximize 'window_string'
+      Unmaximizes a window matching 'window_string'.
+
+   shade 'window_string'
+      Shades a window matching 'window_string'.
+
+   unshade 'window_string'
+      Unshades a window matching 'window_string'.
+
+   unshade_last_shaded
+      Unshades the last shaded window on active workspace.
+
+   snap 'where' 'window_string' ['portion']
+      Snaps a window matching 'window_string' to occupy the 'where' 'portion' of the screen.
+         'where' can be one of 'left', 'right', 'top', 'bottom'
+         'portion' is a float number with the default of 0.5
+
+   resize 'where' ['portion']
+      Resizes the last performed action (snap/tile etc.) on active workspace.
+         'where' can be one of 'left', 'right', 'top', 'bottom'
+             The action depends on the previously performed action. When you resize 'left' a previous snap 'left', you're shrinking the  window. When you resize 'left' a previous snap 'right', you're increasing the size of the window.
+         'portion' is a float number with the default of 0.01 by which to edit the previous portion of the screen
+
+   resize_snap 'where' ['portion']
+      Resizes the last performed snap on active workspace. Arguments are the same as in resize command.
+
+additional information:
+   To use the active window, pass ':ACTIVE:' as the 'window_string' argument.
+		eos
 	end
 	def summon window_str
 		window = self.wm.find_in_windows window_str, @all_workspaces
