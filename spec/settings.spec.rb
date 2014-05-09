@@ -17,4 +17,8 @@ describe 'Settings' do
 	it 'responds false to non-existing settings' do
 		s.loremipsumdolorsitamet.should be_false
 	end
+	it 'checks for requirements on first start' do
+		s.should_receive :test_requirements
+		s.create_new_settings File.expand_path('~/.config/wmctile/wmctile-settings.yml')
+	end
 end

@@ -20,7 +20,23 @@ class Wmctile::Settings < Wmctile::Class
 		end
 	end
 
+	def test_requirements
+		req = ['xrandr', 'wmctrl', 'dmenu']
+		ret = req.reject { |r| self.cmd("which #{ r }").length > 0 }
+		return ret
+	end
 	def create_new_settings path
+		req = self.test_requirements
+		unless req.length == 0
+			puts <<-eos
+You don't have #{ req.join(', ') } installed. Wmctile can't run without that.
+
+To fix this on Ubuntu, run:
+
+sudo apt-get install #{ req.join(' ') }
+			eos
+			exit
+		end
 		dir_path = path[/(.*)\/wmctile-settings.yml/, 1]
 		if not Dir.exists? dir_path
 			Dir.mkdir dir_path
