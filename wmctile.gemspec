@@ -15,4 +15,21 @@ Gem::Specification.new do |s|
 	}.each do |dep, version|
 		s.add_runtime_dependency dep, version
 	end
+	s.post_install_message = <<-eos
+		Thanks for installing wmctile. Make sure, you have the following dependencies installed on your system:
+
+		wmctrl
+		xrandr
+		dmenu
+
+		On Ubuntu it's as easy as running:
+
+		sudo apt-get install wmctrl, xrandr, dmenu
+
+		If you have that, run:
+
+		wmctile help
+
+		to show the available commands. Also be sure to check the detailed docs at http://mreq.eu/.
+	eos
 end
