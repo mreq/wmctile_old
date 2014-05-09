@@ -1,9 +1,9 @@
 Gem::Specification.new do |s|
 	s.name        = 'wmctile'
 	s.version     = '0.0.1'
-	s.date        = '2014-04-23'
+	s.date        = Time.now.strftime('%Y-%m-%d')
 	s.summary     = 'wmctile'
-	s.description = 'A tiling window manager in a gem.'
+	s.description = 'A simple window manager in a gem.'
 	s.authors     = ['mreq']
 	s.email       = 'contact@petrmarek.eu'
 	s.files       = ['lib/wmctile.rb']
@@ -16,20 +16,20 @@ Gem::Specification.new do |s|
 		s.add_runtime_dependency dep, version
 	end
 	s.post_install_message = <<-eos
-		Thanks for installing wmctile. Make sure, you have the following dependencies installed on your system:
+Thanks for installing wmctile. Make sure, you have the following dependencies installed on your system:
 
-		wmctrl
-		xrandr
-		dmenu
+wmctrl
+xrandr
+dmenu
 
-		On Ubuntu it's as easy as running:
+On Ubuntu it's as easy as running:
 
-		sudo apt-get install wmctrl, xrandr, dmenu
+sudo apt-get install wmctrl, xrandr, dmenu
 
-		If you have that, run:
+If you have that, run:
 
-		wmctile help
+wmctile help
 
-		to show the available commands. Also be sure to check the detailed docs at http://mreq.eu/.
+to show the available commands. Also be sure to check the detailed docs at http://mreq.eu.
 	eos
 end

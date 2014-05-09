@@ -27,7 +27,7 @@ class Wmctile::Settings < Wmctile::Class
 	end
 	def create_new_settings path
 		req = self.test_requirements
-		unless req.length == 0
+		unless req.nil? or req.length == 0
 			puts <<-eos
 You don't have #{ req.join(', ') } installed. Wmctile can't run without that.
 
