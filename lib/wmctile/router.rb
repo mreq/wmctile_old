@@ -12,7 +12,7 @@ class Wmctile::Router < Wmctile::Class
 	def dispatch args = []
 		if args.length
 			main_arg = args[0]
-			if main_arg == '--all-workspaces'
+			if ['--all-workspaces', '-a'].include? main_arg 
 				@all_workspaces = true
 				drop = 2
 				main_arg = args[1]
