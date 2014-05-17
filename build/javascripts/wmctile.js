@@ -10527,7 +10527,6 @@ return jQuery;
   })
 
 }(jQuery);
-(function() {
 
 
-}).call(this);
+

@@ -7,9 +7,6 @@
 #   config.output_style = :compact
 # end
 
-require "coffee-script"
-require "less"
-
 ###
 # Page options, layouts, aliases and proxies
 ###
@@ -41,12 +38,15 @@ require "less"
 # Reload the browser automatically whenever files change
 activate :livereload
 
+activate :directory_indexes
+
 # Methods defined in the helpers block are available in templates
-# helpers do
-#   def some_helper
-#     "Helping"
-#   end
-# end
+helpers do
+  def license
+    f = File.read('LICENSE').gsub('<', '&lt;').gsub('>', '&gt;')
+    f
+  end
+end
 
 ###
 # Gem
@@ -56,8 +56,6 @@ set :css_dir, 'stylesheets'
 set :js_dir, 'javascripts'
 
 set :images_dir, 'images'
-
-activate :directory_indexes
 
 # Build-specific configuration
 configure :build do
@@ -74,6 +72,8 @@ configure :build do
   activate :relative_assets
 
   ignore 'stylesheets/**/*'
+  ignore 'stylesheets/*.less'
+  ignore 'javascripts/*.coffee'
   ignore 'bower_components'
   ignore 'bower_components/*'
 

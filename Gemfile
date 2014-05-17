@@ -5,9 +5,9 @@ source 'http://rubygems.org'
 gem "middleman", "~>3.3.2"
 gem "slim", "~> 2.0"
 
-gem "coffee-script"
-gem "less"
-gem "therubyracer", '~> 0.10.2'
+# gem "coffee-script"
+# gem "less"
+# gem "therubyracer", '~> 0.10.2'
 
 gem "urlify", "~>0.2.2"
 
