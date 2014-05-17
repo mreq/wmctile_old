@@ -18,6 +18,4 @@
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
 
-# gh-pages
-source/
-build/
+source/bower_components

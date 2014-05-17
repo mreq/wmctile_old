@@ -1,0 +1,52 @@
+.jumbotron
+	.container
+		h1 wmctile
+		p Window manager's best friend in a gem.
+
+.container
+	.row
+		.col-md-6
+			h2 About wmctile
+
+			p Wmctile was created because of the regular set of Desktop Environments lacking crucial features such as:
+
+			ul
+				li Switching windows based on application names.
+				li Snapping windows to various sizes anywhere on the screen.
+				li Resizing windows by a certain amount.
+				li Tiling windows to fill the screen.
+
+			p Wmctile enables you to do that and much more.
+
+			h3 What's with the name?
+
+			p It's a mix of the words wmctrl and tile, former being the key utility wmctile uses and latter a word related to tiling window managers.
+
+		.col-md-6
+			h2 Getting started
+
+			p Easy distribution and installation is the main reason why wmctile is written in Ruby. It's bundled as a gem, so the actual installation couldn't be easier.
+
+			h3 Installation
+
+			ol
+				li
+					p Install required packages (wmctrl, xrandr, dmenu). Ubuntu has all these in the standard repositories so it's as easy as writing:
+
+					pre sudo apt-get install wmctrl xrandr dmenu
+
+					p
+						| You'll need Ruby and RubyGems installed as well. If you need help, check the detailed 
+						a href="/installation" installation guide
+						|  .
+				li
+					p Install the wmctile gem:
+
+					pre gem install wmctile
+				li
+					p
+						| That's it :) Check the help command or 
+						a href="/docs" the docs
+						|  to see what you can do.
+
+					pre wmctile help

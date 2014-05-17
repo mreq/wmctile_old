@@ -1,0 +1,89 @@
+@bf: @font-size-base;
+@bl: @line-height-computed;
+.wh(@width, @height) {
+	width: @width;
+	height: @height;
+}
+.sq(@s) {
+	.square(@s);
+}
+.rounded(@radius: 5px) {
+	-webkit-border-radius: @radius;
+	-moz-border-radius: @radius;
+	-ms-border-radius: @radius;
+	border-radius: @radius;
+}
+.topleft(@top: 0, @left: 0) {
+	position: absolute;
+	top: @top;
+	left: @left;
+	right: auto;
+	bottom: auto;
+}
+.topright(@top: 0, @right: 0) {
+	position: absolute;
+	top: @top;
+	left: auto;
+	right: @right;
+	bottom: auto;
+}
+.bottomleft(@bottom: 0, @left: 0) {
+	position: absolute;
+	top: auto;
+	left: @left;
+	right: auto;
+	bottom: @bottom;
+}
+.bottomright(@bottom: 0, @right: 0) {
+	position: absolute;
+	top: auto;
+	left: auto;
+	right: @right;
+	bottom: @bottom;
+}
+.ic(@icoHeight: 16px) {
+	position: absolute;
+	top: 50%;
+	margin-top: -0.5 * @icoHeight;
+}
+.il(@icoWidth: 16px) {
+	position: absolute;
+	left: 50%;
+	margin-left: -0.5 * @icoWidth;
+}
+.icl(@icoWidth: 16px, @icoHeight: @icoWidth) {
+	.ic(@icoHeight);
+	left: 50%;
+	margin-left: -0.5 * @icoWidth;
+}
+.icr(@icoWidth: 16px, @icoHeight: 16px) {
+	.ic(@icoHeight);
+	right: 50%;
+	margin-right: -0.5 * @icoWidth;
+}
+.fsize(@fontSize: @bf, @lineHeight: round(@fontSize*@bl/@bf)) {
+	font-size: @fontSize;
+	line-height: @lineHeight;
+}
+.no-transition() {
+	.transition(none 0s);
+}
+.ib() {
+	display: inline-block;
+	.ie7-inline-block;
+}
+.ul() {
+	margin: 0;
+	padding-left: 0;
+	> li {
+		padding-left: 0;
+		list-style: none;
+		display: block;
+	}
+}
+.placeholder-color(@color) {
+	&::-webkit-input-placeholder { color: @color; }
+	&:-moz-placeholder { color: @color; }
+	&::-moz-placeholder { color: @color; }
+	&:-ms-input-placeholder { color: @color; }
+}

@@ -1,0 +1,24 @@
+@import 'bootstrap/bootstrap.less';
+@import 'mreq/mreq.less';
+
+body {
+	padding-top: 50px;
+}
+
+#github-link {
+	@media (max-width: @grid-float-breakpoint) {
+		display: none;
+	}
+	&, img {
+		z-index: 1060;
+	}
+}
+#w-license {
+	font-family: @font-family-monospace;
+	white-space: pre;
+	text-align: center;
+	#w-license-inner {
+		display: inline-block;
+		text-align: left;
+	}
+}
