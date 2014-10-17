@@ -107,6 +107,9 @@ class Wmctile::WindowTiler < Wmctile::ClassWithDmenu
 			layout = self.dmenu @tiling_layouts
 		end
 		return  if layout.nil? or !(@tiling_layouts.include? layout)
+
+		# do some work for ruby and convert ratio to a fixnum
+		ratio = ratio.to_f
 		
 		# get the amount of windows needed
 		if ['[ | ]', '[---]'].include? layout

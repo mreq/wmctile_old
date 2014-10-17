@@ -157,8 +157,8 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 			}
 		when 'right'
 			{
-				:x => self.width(portion), :y => @settings.panel_height,
-				:width => self.width(1-portion)
+				:x => self.width(1-portion), :y => @settings.panel_height,
+				:width => self.width(portion)
 			}
 		when 'top'
 			{
