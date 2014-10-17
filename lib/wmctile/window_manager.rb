@@ -150,22 +150,22 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 		when 'left'
 			{
 				:x => @settings.panel_width, :y => @settings.panel_height,
-				:height => self.height, :width => self.width(portion)
+				:width => self.width(portion)
 			}
 		when 'right'
 			{
 				:x => self.width(portion), :y => @settings.panel_height,
-				:height => self.height, :width => self.width(1-portion)
+				:width => self.width(1-portion)
 			}
 		when 'top'
 			{
 				:x => @settings.panel_width, :y => @settings.panel_height,
-				:height => self.height(portion), :width => self.width
+				:height => self.height(portion)
 			}
 		when 'bottom'
 			{
 				:x => @settings.panel_width, :y => @settings.panel_height + self.height(1-portion),
-				:height => self.height(portion), :width => self.width
+				:height => self.height(portion)
 			}
 		else
 			nil

@@ -27,6 +27,11 @@ class Wmctile::WindowTiler < Wmctile::Class
 			how_to_move = self.wm.calculate_snap where, portion.to_f
 			if how_to_move
 				window.move how_to_move
+				if ['left', 'right'].include? where
+					window.maximize_vert
+				else
+					window.maximize_horiz
+				end
 				self.memory.set self.wm.workspace, 'snap', {
 					'where' => where, 'portion' => portion, 'window_id' => window.id
 				}

@@ -66,4 +66,10 @@ class Wmctile::Window < Wmctile::Class
 	def unmaximize
 		self.wmctrl '-b remove,maximized_vert,maximized_horz'
 	end
+	def maximize_horiz
+		self.wmctrl '-b add,maximized_horz'
+	end
+	def maximize_vert
+		self.wmctrl '-b add,maximized_vert'
+	end
 end
