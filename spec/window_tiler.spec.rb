@@ -34,5 +34,12 @@ describe 'WindowTiler' do
 			end
 		end
 	end
+
+	describe 'tiling' do
+		it 'has tiling layouts defined' do
+			t.tiling_layouts.should be_kind_of Array
+			t.tiling_layouts.length.should_not be 0
+		end
+	end
 	
 end

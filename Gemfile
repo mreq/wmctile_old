@@ -14,5 +14,10 @@ gem "urlify", "~>0.2.2"
 # Live-reloading plugin
 gem "middleman-livereload", "~> 3.1.0"
 
+gem "rspec"
+gem "rspec-notify-osd"
+gem "guard-rspec", require: false
+gem "dmenu"
+
 # For faster file watcher updates on Windows:
 gem "wdm", "~> 0.1.0", :platforms => [:mswin, :mingw]

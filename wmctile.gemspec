@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
 	s.executables << 'wmctile'
 	# dependencies
 	{
-		:dmenu => '~> 0.0'
+		:dmenu => '~> 1.0'
 	}.each do |dep, version|
 		s.add_runtime_dependency dep, version
 	end
@@ -25,7 +25,7 @@ dmenu
 
 On Ubuntu it's as easy as running:
 
-sudo apt-get install wmctrl, xrandr, dmenu
+sudo apt-get install wmctrl suckless-tools
 
 If you have that, run:
 

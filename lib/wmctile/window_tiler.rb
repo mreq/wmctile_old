@@ -1,4 +1,5 @@
 class Wmctile::WindowTiler < Wmctile::Class
+	attr_accessor :tiling_layouts
 	##################################
 	## init ##########################
 	##################################
@@ -6,6 +7,7 @@ class Wmctile::WindowTiler < Wmctile::Class
 		@settings = settings
 		@memory = memory
 		@wm = wm
+		@tiling_layouts = ['[ | ]', '[---]', '[-|-]', '[ |-]', '[-| ]']
 	end
 	##################################
 	## object getter methods #########

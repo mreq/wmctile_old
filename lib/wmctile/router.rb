@@ -60,6 +60,9 @@ options:
    --all-workspaces, -a
       Use all workspaces when searching for windows. 
 
+explanation:
+	Optional arguments in the "commands" bellow are written in [square brackets]. This syntax only matches the fact that the argument is not required. When it's used, it shouldn't be surrounded by brackets.
+
 commands:
    summon 'window_string'
       Summons a window matching 'window_str'.
@@ -96,8 +99,8 @@ commands:
    resize 'where' ['portion']
       Resizes the last performed action (snap/tile etc.) on active workspace.
          'where' can be one of 'left', 'right', 'top', 'bottom'
-             The action depends on the previously performed action. When you resize 'left' a previous snap 'left', you're shrinking the  window. When you resize 'left' a previous snap 'right', you're increasing the size of the window.
-         'portion' is a float number with the default of 0.01 by which to edit the previous portion of the screen
+             The action depends on the previously performed action. When you resize 'left' a previous snap 'left', you're shrinking the window. When you resize 'left' a previous snap 'right', you're increasing the size of the window.
+         'portion' is a float number by which to edit the previous portion of the screen with the default of 0.01.
 
    resize_snap 'where' ['portion']
       Resizes the last performed snap on active workspace. Arguments are the same as in resize command.
