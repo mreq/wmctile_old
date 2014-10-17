@@ -68,6 +68,7 @@ describe 'Window' do
 			w.should_receive :wmctrl
 			# unmaximize
 			w.should_receive :wmctrl
+			w.should_receive :wmctrl
 			# movement
 			w.should_receive(:wmctrl) do |arg|
 				arg.match('-e 0,30,30').should_not be_nil

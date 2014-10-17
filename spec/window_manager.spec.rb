@@ -34,6 +34,12 @@ describe 'WindowManager' do
 		found_win.get_name.should eq active_win.get_name
 	end
 
+	it 'understands window_str can be a window object' do
+		settings = Wmctile::Settings.new
+		w = Wmctile::Window.new "0x12345678  1 terminator.Terminator  #{ settings.hostname } petr@sova: ~/work/wmctile", settings
+		wm.get_window(w).should be w
+	end
+
 	it 'is able to ask for a window' do
 		wm.ask_for_window.should be_kind_of Wmctile::Window
 	end

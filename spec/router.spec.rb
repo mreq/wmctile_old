@@ -83,4 +83,10 @@ describe 'Router' do
 			r.memory.get(wsp, 'unshade', 'window_id').should eq id
 		end
 	end
+	describe 'tiling method' do
+		it 'passed to window tiler' do
+			r.wt.should_receive(:tile).with '[ | ]'
+			r.tile '[ | ]'
+		end
+	end
 end

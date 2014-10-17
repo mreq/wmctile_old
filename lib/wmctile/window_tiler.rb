@@ -1,4 +1,4 @@
-class Wmctile::WindowTiler < Wmctile::Class
+class Wmctile::WindowTiler < Wmctile::ClassWithDmenu
 	attr_accessor :tiling_layouts
 	##################################
 	## init ##########################
@@ -29,7 +29,7 @@ class Wmctile::WindowTiler < Wmctile::Class
 				window.move how_to_move
 				if ['left', 'right'].include? where
 					window.maximize_vert
-				else
+				elsif ['top', 'bottom']
 					window.maximize_horiz
 				end
 				self.memory.set self.wm.workspace, 'snap', {
@@ -97,6 +97,51 @@ class Wmctile::WindowTiler < Wmctile::Class
 		unless negative.nil?
 			portion = -portion  if negative
 			self.snap info['where'], info['window_id'], info['portion']+portion
+		end
+	end
+	##################################
+	## tiling methods ################
+	##################################
+	def tile layout = 'choose', ratio = 0.5, *args
+		if layout == 'choose' or !(@tiling_layouts.include? layout)
+			layout = self.dmenu @tiling_layouts
+		end
+		return  if layout.nil? or !(@tiling_layouts.include? layout)
+		
+		# get the amount of windows needed
+		if ['[ | ]', '[---]'].include? layout
+			windows_needed = 2
+		elsif '[-|-]' == layout
+			windows_needed = 4
+		else
+			windows_needed = 3
+		end
+
+		# get windows from args
+		windows = args.map { |str| self.wm.get_window str }
+		# fill the rest with prompted windows
+		(windows_needed - windows.length).times do windows.push self.wm.ask_for_window; end
+
+		# now that we have the windows, apply the layout
+		if layout == '[ | ]'
+			self.snap 'left', windows[0], ratio
+			self.snap 'right', windows[1], 1 - ratio
+		elsif layout == '[---]'
+			self.snap 'top', windows[0], ratio
+			self.snap 'bottom', windows[1], 1 - ratio
+		elsif layout == '[-|-]'
+			self.snap 'topleft', windows[0], ratio
+			self.snap 'bottomleft', windows[1], ratio
+			self.snap 'topright', windows[2], 1 - ratio
+			self.snap 'bottomright', windows[3], 1 - ratio
+		elsif layout == '[ |-]'
+			self.snap 'left', windows[0], ratio
+			self.snap 'topright', windows[1], 1 - ratio
+			self.snap 'bottomright', windows[2], 1 - ratio
+		elsif layout == '[-| ]'
+			self.snap 'topleft', windows[0], ratio
+			self.snap 'bottomleft', windows[1], ratio
+			self.snap 'right', windows[2], 1 - ratio
 		end
 	end
 end

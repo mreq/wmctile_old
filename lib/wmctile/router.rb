@@ -187,4 +187,11 @@ additional information:
 		self.wt.resize_snap where, portion
 	end
 
+	def resize_snap where = 'left', portion = 0.01
+		self.wt.resize_snap where, portion
+	end
+	def tile *args
+		self.wt.tile *args		
+	end
+
 end

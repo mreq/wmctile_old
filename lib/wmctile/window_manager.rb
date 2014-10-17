@@ -32,6 +32,9 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 		if window_str.nil?
 			window = self.ask_for_window all_workspaces
 		else
+			if window_str.is_a? Wmctile::Window
+				return window_str
+			end
 			if window_str == ':ACTIVE:'
 				window = self.get_active_window
 			else
@@ -164,8 +167,28 @@ class Wmctile::WindowManager < Wmctile::ClassWithDmenu
 			}
 		when 'bottom'
 			{
-				:x => @settings.panel_width, :y => @settings.panel_height + self.height(1-portion),
-				:height => self.height(portion)
+				:x => @settings.panel_width, :y => @settings.panel_height + self.height(1-portion) + @settings.titlebar_height,
+				:height => self.height(portion) - @settings.titlebar_height
+			}
+		when 'topleft'
+			{
+				:x => @settings.panel_width, :y => @settings.panel_height,
+				:width => self.width(portion), :height => self.height(0.5)
+			}
+		when 'topright'
+			{
+				:x => self.width(portion), :y => @settings.panel_height,
+				:width => self.width(1-portion), :height => self.height(0.5)
+			}
+		when 'bottomleft'
+			{
+				:x => @settings.panel_width, :y => @settings.panel_height + self.height(0.5),
+				:width => self.width(portion), :height => self.height(0.5)
+			}
+		when 'bottomright'
+			{
+				:x => self.width(portion), :y => @settings.panel_height + self.height(0.5),
+				:width => self.width(1-portion), :height => self.height(0.5)
 			}
 		else
 			nil

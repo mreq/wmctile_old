@@ -18,4 +18,4 @@ Wmctile enables you to do that and much more.
 Contribution
 ------------
 
-Is welcome. You'll need `rspec rspec-notify-osd` gems. Wmctile is TDD where possible, so please, test your code :)
+Is welcome. You'll need to `bundle install` to get the gems. Wmctile is TDD where possible, so please, test your code :) It's as simple as running `guard`.
