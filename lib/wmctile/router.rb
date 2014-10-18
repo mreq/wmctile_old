@@ -64,6 +64,9 @@ explanation:
 	Optional arguments in the "commands" bellow are written in [square brackets]. This syntax only matches the fact that the argument is not required. When it's used, it shouldn't be surrounded by brackets.
 
 commands:
+   list
+      Lists windows for easier matching.
+
    summon 'window_string'
       Summons a window matching 'window_str'.
 
@@ -108,6 +111,17 @@ commands:
 additional information:
    To use the active window, pass ':ACTIVE:' as the 'window_string' argument.
 		eos
+	end
+	def list
+		on_workspace = self.wm.windows
+		all_windows = self.wm.windows true
+
+		puts 'Windows on current workspace:'
+		names = on_workspace.map { |w| w.name }
+		names.uniq.each { |w| puts "   #{ w }" }
+		puts '', 'Windows on all workspaces:'
+		names = all_windows.map { |w| w.name }
+		names.uniq.each { |w| puts "   #{ w }" }
 	end
 	def summon window_str
 		window = self.wm.find_in_windows window_str, @all_workspaces

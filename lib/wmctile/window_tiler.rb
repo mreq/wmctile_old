@@ -29,7 +29,7 @@ class Wmctile::WindowTiler < Wmctile::ClassWithDmenu
 				window.move how_to_move
 				if ['left', 'right'].include? where
 					window.maximize_vert
-				elsif ['top', 'bottom']
+				elsif ['top', 'bottom'].include? where
 					window.maximize_horiz
 				end
 				self.memory.set self.wm.workspace, 'snap', {
@@ -127,24 +127,28 @@ class Wmctile::WindowTiler < Wmctile::ClassWithDmenu
 
 		# now that we have the windows, apply the layout
 		if layout == '[ | ]'
-			self.snap 'left', windows[0], ratio
-			self.snap 'right', windows[1], 1 - ratio
+			windows[0].move self.wm.calculate_snap('left', ratio)
+			windows[1].move self.wm.calculate_snap('right', 1 - ratio)
 		elsif layout == '[---]'
-			self.snap 'top', windows[0], ratio
-			self.snap 'bottom', windows[1], 1 - ratio
+			windows[0].move self.wm.calculate_snap('top', ratio)
+			windows[1].move self.wm.calculate_snap('bottom', 1 - ratio)
 		elsif layout == '[-|-]'
-			self.snap 'topleft', windows[0], ratio
-			self.snap 'bottomleft', windows[1], ratio
-			self.snap 'topright', windows[2], 1 - ratio
-			self.snap 'bottomright', windows[3], 1 - ratio
+			windows[0].move self.wm.calculate_snap('topleft', ratio)
+			windows[1].move self.wm.calculate_snap('bottomleft', ratio)
+			windows[2].move self.wm.calculate_snap('topright', 1 - ratio)
+			windows[3].move self.wm.calculate_snap('bottomright', 1 - ratio)
 		elsif layout == '[ |-]'
-			self.snap 'left', windows[0], ratio
-			self.snap 'topright', windows[1], 1 - ratio
-			self.snap 'bottomright', windows[2], 1 - ratio
+			windows[0].move self.wm.calculate_snap('left', ratio)
+			windows[1].move self.wm.calculate_snap('topright', 1 - ratio)
+			windows[2].move self.wm.calculate_snap('bottomright', 1 - ratio)
 		elsif layout == '[-| ]'
-			self.snap 'topleft', windows[0], ratio
-			self.snap 'bottomleft', windows[1], ratio
-			self.snap 'right', windows[2], 1 - ratio
+			windows[0].move self.wm.calculate_snap('topleft', ratio)
+			windows[1].move self.wm.calculate_snap('bottomleft', ratio)
+			windows[2].move self.wm.calculate_snap('right', 1 - ratio)
+		else
+			return
 		end
+		# bring the windows to top
+		windows.each { |w| w.switch_to }
 	end
 end
