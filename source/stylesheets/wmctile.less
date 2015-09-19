@@ -4,6 +4,87 @@
 body {
 	padding-top: 50px;
 }
+.prompt {
+	code {
+		&:before {
+			content: 'user@host:~$ ';
+			color: #aaa;
+		}
+	}
+}
+.example-wrap {
+	position: relative;
+	padding-left: 175px;
+	height: 100px;
+	.example {
+		.rounded(3px);
+		.topleft;
+		width: 150px;
+		height: 100%;
+		background: #bbb;
+		border: 1px solid #909090;
+		.window {
+			.rounded(3px);
+			position: absolute;
+			top: 5%;
+			left: 5%;
+			width: 90%;
+			height: 90%;
+			font-weight: bold;
+			text-align: center;
+			color: black;
+			z-index: 1;
+			border: 1px solid black;
+			+ .window {
+				z-index: 2;
+				+ .window {
+					z-index: 3;
+					+ .window {
+						z-index: 4;
+					}
+				}
+			}
+			&:before {
+				@s: 20px;
+				.opacity(0.2);
+				.ic(@s);
+				font-size: @s;
+				line-height: @s;
+				width: 100%;
+				display: block;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+			&.blue {
+				@c: #4F8690;
+				background: @c;
+				border-color: darken(@c, 10%);
+				&:before { content: 'blue.Window'; }
+			}
+			&.red {
+				@c: #8A4343;
+				background: @c;
+				border-color: darken(@c, 10%);
+				&:before { content: 'red.Window'; }
+			}
+		}
+		> div { display: none; }
+	}
+	.code {
+		#flex .display;
+		#flex .align;
+		height: 100%;
+		font-family: @font-family-monospace;
+	}
+
+	&.step-1 .step-1 { display: block !important; }
+	&.step-2 .step-2 { display: block !important; }
+	&.step-3 .step-3 { display: block !important; }
+	&.step-4 .step-4 { display: block !important; }
+	&.step-5 .step-5 { display: block !important; }
+	&.step-6 .step-6 { display: block !important; }
+}
 
 #github-link {
 	@media (max-width: @grid-float-breakpoint) {

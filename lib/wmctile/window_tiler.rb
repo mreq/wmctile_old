@@ -38,10 +38,68 @@ class Wmctile::WindowTiler < Wmctile::ClassWithDmenu
 			end
 		end
 	end
+	##################################
+	## tiling methods ################
+	##################################
+	def tile layout = 'choose', portion = 0.5, *args
+		if layout == 'choose' or !(@tiling_layouts.include? layout)
+			layout = self.dmenu @tiling_layouts
+		end
+		return  if layout.nil? or !(@tiling_layouts.include? layout)
+
+		# do some work for ruby and convert portion to a fixnum
+		portion = portion.to_f
+		
+		# get the amount of windows needed
+		if ['[ | ]', '[---]'].include? layout
+			windows_needed = 2
+		elsif '[-|-]' == layout
+			windows_needed = 4
+		else
+			windows_needed = 3
+		end
+
+		# get windows from args
+		windows = args.map { |str| self.wm.get_window str }
+		# fill the rest with prompted windows
+		(windows_needed - windows.length).times do windows.push self.wm.ask_for_window; end
+
+		# now that we have the windows, apply the layout
+		if layout == '[ | ]'
+			windows[0].move self.wm.calculate_snap('left', portion)
+			windows[1].move self.wm.calculate_snap('right', 1 - portion)
+		elsif layout == '[---]'
+			windows[0].move self.wm.calculate_snap('top', portion)
+			windows[1].move self.wm.calculate_snap('bottom', 1 - portion)
+		elsif layout == '[-|-]'
+			windows[0].move self.wm.calculate_snap('topleft', portion)
+			windows[1].move self.wm.calculate_snap('bottomleft', portion)
+			windows[2].move self.wm.calculate_snap('topright', 1 - portion)
+			windows[3].move self.wm.calculate_snap('bottomright', 1 - portion)
+		elsif layout == '[ |-]'
+			windows[0].move self.wm.calculate_snap('left', portion)
+			windows[1].move self.wm.calculate_snap('topright', 1 - portion)
+			windows[2].move self.wm.calculate_snap('bottomright', 1 - portion)
+		elsif layout == '[-| ]'
+			windows[0].move self.wm.calculate_snap('topleft', portion)
+			windows[1].move self.wm.calculate_snap('bottomleft', portion)
+			windows[2].move self.wm.calculate_snap('right', 1 - portion)
+		else
+			return
+		end
+		self.memory.set self.wm.workspace, 'tile', {
+			'layout' => layout, 'portion' => portion, 'window_ids' => "'#{ windows.map(&:id).join(",") }'"
+		}
+		# bring the windows to top
+		windows.each { |w| w.switch_to }
+	end
+	##################################
+	## resize methods ################
+	##################################
 	def resize where = 'left', portion = 0.01
 		portion = portion.to_f
 		# what are we moving? the last one used from these:
-		methods = ['snap']
+		methods = ['snap', 'tile']
 		freshest_meth = nil
 		freshest_time = 0
 		methods.each do |meth|
@@ -98,57 +156,5 @@ class Wmctile::WindowTiler < Wmctile::ClassWithDmenu
 			portion = -portion  if negative
 			self.snap info['where'], info['window_id'], info['portion']+portion
 		end
-	end
-	##################################
-	## tiling methods ################
-	##################################
-	def tile layout = 'choose', ratio = 0.5, *args
-		if layout == 'choose' or !(@tiling_layouts.include? layout)
-			layout = self.dmenu @tiling_layouts
-		end
-		return  if layout.nil? or !(@tiling_layouts.include? layout)
-
-		# do some work for ruby and convert ratio to a fixnum
-		ratio = ratio.to_f
-		
-		# get the amount of windows needed
-		if ['[ | ]', '[---]'].include? layout
-			windows_needed = 2
-		elsif '[-|-]' == layout
-			windows_needed = 4
-		else
-			windows_needed = 3
-		end
-
-		# get windows from args
-		windows = args.map { |str| self.wm.get_window str }
-		# fill the rest with prompted windows
-		(windows_needed - windows.length).times do windows.push self.wm.ask_for_window; end
-
-		# now that we have the windows, apply the layout
-		if layout == '[ | ]'
-			windows[0].move self.wm.calculate_snap('left', ratio)
-			windows[1].move self.wm.calculate_snap('right', 1 - ratio)
-		elsif layout == '[---]'
-			windows[0].move self.wm.calculate_snap('top', ratio)
-			windows[1].move self.wm.calculate_snap('bottom', 1 - ratio)
-		elsif layout == '[-|-]'
-			windows[0].move self.wm.calculate_snap('topleft', ratio)
-			windows[1].move self.wm.calculate_snap('bottomleft', ratio)
-			windows[2].move self.wm.calculate_snap('topright', 1 - ratio)
-			windows[3].move self.wm.calculate_snap('bottomright', 1 - ratio)
-		elsif layout == '[ |-]'
-			windows[0].move self.wm.calculate_snap('left', ratio)
-			windows[1].move self.wm.calculate_snap('topright', 1 - ratio)
-			windows[2].move self.wm.calculate_snap('bottomright', 1 - ratio)
-		elsif layout == '[-| ]'
-			windows[0].move self.wm.calculate_snap('topleft', ratio)
-			windows[1].move self.wm.calculate_snap('bottomleft', ratio)
-			windows[2].move self.wm.calculate_snap('right', 1 - ratio)
-		else
-			return
-		end
-		# bring the windows to top
-		windows.each { |w| w.switch_to }
 	end
 end

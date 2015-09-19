@@ -1,0 +1,76 @@
+.container
+	h1 Wmctile guides
+
+	p This page contains simple examples of using wmctile.
+
+	h2 General information
+
+	p Wmctile uses wmctrl to switch, move or arrange windows. It's a command-line utility, not a daemon.
+
+	h3 Basic command and arguments
+
+	p The basic form of a wmctile command is:
+
+	pre.prompt
+		code wmctile [--option1, --option2, ...] &lt;command&gt; ['argument1', 'argument2', ...]
+
+	p Available commands are:
+
+	ul
+		li <a href="#cmd_summon">summon</a> and <a href="#cmd_summon_or_run">summon_or_run</a>
+		li <a href="#cmd_switch_to">switch_to</a> and <a href="#cmd_switch_to_or_run">switch_to_or_run</a>
+		li <a href="#cmd_maximize">maximize</a> and <a href="#cmd_unmaximize">unmaximize</a>
+		li <a href="#cmd_shade">shade</a> and <a href="#cmd_unshade">unshade</a>
+		li <a href="#cmd_snap">snap</a>
+		li <a href="#cmd_resize">resize</a>
+
+	p An example command, snapping a Thunderbird window to the left half of the screen would be:
+
+	pre.prompt
+		code wmctile snap 'left' 'Mail.Thunderbird'
+
+	p One of the arguments is usually a <code>window_string</code> which is given in the form wmctrl uses. To see what wmctile uses, let's look at what it outputs:
+
+	pre.prompt
+		code
+			| wmctrl -lx
+			br
+			| 0x00600004 -1 xfce4-panel.Xfce4-panel  hostname xfce4-panel
+			br
+			| 0x01000003 -1 xfdesktop.Xfdesktop   hostname Desktop
+			br
+			| 0x06000003  1 sublime_text.Sublime_text  hostname ~/whatever/path
+			br
+			| 0x0620001a  2 scudcloud.Scudcloud   hostname ScudCloud
+			br
+			| 0x066000a6  2 Mail.Thunderbird      hostname Inbox - host@name.com - Mozilla Thunderbird
+
+	p When looking up applications, wmctile simply greps the output shown above. The relevant part is the middle one, as it's unique to each application, allowing the user to identify different applications (the title can't be used as it may change at any time). 
+
+	h2 Using wmctile
+
+	h3 Switching windows
+
+	p Commands used:
+
+	ul
+		li <a id="cmd_summon" href="#cmd_summon">summon</a> and <a id="cmd_summon_or_run" href="#cmd_summon_or_run">summon_or_run</a>
+		li <a href="#cmd_switch_to">switch_to</a> and <a id="cmd_switch_to_or_run" href="#cmd_switch_to_or_run">switch_to_or_run</a>
+
+	p Wmctile distinguishes between switching to and summoning an application. Switching to an application means going to the application's workspace and raising the window. Summoning an application brings it to your current workspace and then raises it. There's no difference if you're working on a single workspace or if you don't use the <code>--all-workspaces</code> option.
+
+	h4#cmd_switch_to Switching to a window
+
+	.example-wrap.step-1
+		.example
+			.step-1
+				.window.blue style="height: 80%; top: 15%;"
+				.window.red style="width: 70%; left: 20%; height: 80%;"
+			.step-2
+				.window.red style="width: 70%; left: 20%; height: 80%;"
+				.window.blue style="height: 80%; top: 15%;"
+		.code.prompt
+			pre.step-1
+				code wmctile switch_to 'blue.Window'
+
+	h2 Creating keyboard shortcuts

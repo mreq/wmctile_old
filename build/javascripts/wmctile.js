@@ -10527,6 +10527,14 @@ return jQuery;
   })
 
 }(jQuery);
+(function() {
+  $(function() {
+    return console.log('todo');
+  });
+
+}).call(this);
+
+
 
 
 
