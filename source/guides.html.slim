@@ -1,76 +1,224 @@
 .container
-	h1 Wmctile guides
+	.row
+		#aside-col.col-sm-3
+			nav.docs-sidebar
+		#main-col.col-sm-9
+			h1 Wmctile guides
 
-	p This page contains simple examples of using wmctile.
+			p This page contains simple examples of using wmctile.
 
-	h2 General information
+			h2 General information
 
-	p Wmctile uses wmctrl to switch, move or arrange windows. It's a command-line utility, not a daemon.
+			.wrap
 
-	h3 Basic command and arguments
+				p Wmctile uses wmctrl to switch, move or arrange windows. It's a command-line utility, not a daemon.
 
-	p The basic form of a wmctile command is:
+				h3 Basic command and arguments
 
-	pre.prompt
-		code wmctile [--option1, --option2, ...] &lt;command&gt; ['argument1', 'argument2', ...]
+				p The basic form of a wmctile command is:
 
-	p Available commands are:
+				pre.prompt
+					code wmctile [--option1, --option2, ...] &lt;command&gt; ['argument1', 'argument2', ...]
 
-	ul
-		li <a href="#cmd_summon">summon</a> and <a href="#cmd_summon_or_run">summon_or_run</a>
-		li <a href="#cmd_switch_to">switch_to</a> and <a href="#cmd_switch_to_or_run">switch_to_or_run</a>
-		li <a href="#cmd_maximize">maximize</a> and <a href="#cmd_unmaximize">unmaximize</a>
-		li <a href="#cmd_shade">shade</a> and <a href="#cmd_unshade">unshade</a>
-		li <a href="#cmd_snap">snap</a>
-		li <a href="#cmd_resize">resize</a>
+				p Available commands are:
 
-	p An example command, snapping a Thunderbird window to the left half of the screen would be:
+				ul
+					li <a href="#cmd_summon">summon</a> and <a href="#cmd_summon_or_run">summon_or_run</a>
+					li <a href="#cmd_switch_to">switch_to</a> and <a href="#cmd_switch_to_or_run">switch_to_or_run</a>
+					li <a href="#cmd_maximize">maximize</a> and <a href="#cmd_unmaximize">unmaximize</a>
+					li <a href="#cmd_shade">shade</a> and <a href="#cmd_unshade">unshade</a>
+					li <a href="#cmd_snap">snap</a>
+					li <a href="#cmd_resize">resize</a>
 
-	pre.prompt
-		code wmctile snap 'left' 'Mail.Thunderbird'
+				p An example command, snapping a Thunderbird window to the left half of the screen would be:
 
-	p One of the arguments is usually a <code>window_string</code> which is given in the form wmctrl uses. To see what wmctile uses, let's look at what it outputs:
+				pre.prompt
+					code wmctile snap 'left' 'Mail.Thunderbird'
 
-	pre.prompt
-		code
-			| wmctrl -lx
-			br
-			| 0x00600004 -1 xfce4-panel.Xfce4-panel  hostname xfce4-panel
-			br
-			| 0x01000003 -1 xfdesktop.Xfdesktop   hostname Desktop
-			br
-			| 0x06000003  1 sublime_text.Sublime_text  hostname ~/whatever/path
-			br
-			| 0x0620001a  2 scudcloud.Scudcloud   hostname ScudCloud
-			br
-			| 0x066000a6  2 Mail.Thunderbird      hostname Inbox - host@name.com - Mozilla Thunderbird
+				p One of the arguments is usually a <code>window_string</code> which is given in the form wmctrl uses. To see what wmctile uses, let's look at what it outputs:
 
-	p When looking up applications, wmctile simply greps the output shown above. The relevant part is the middle one, as it's unique to each application, allowing the user to identify different applications (the title can't be used as it may change at any time). 
+				pre.prompt
+					code
+						| wmctrl -lx
+						br
+						| 0x00600004 -1 xfce4-panel.Xfce4-panel  hostname xfce4-panel
+						br
+						| 0x01000003 -1 xfdesktop.Xfdesktop   hostname Desktop
+						br
+						| 0x06000003  1 sublime_text.Sublime_text  hostname ~/whatever/path
+						br
+						| 0x0620001a  2 scudcloud.Scudcloud   hostname ScudCloud
+						br
+						| 0x066000a6  2 Mail.Thunderbird      hostname Inbox - host@name.com - Mozilla Thunderbird
 
-	h2 Using wmctile
+				p When looking up applications, wmctile simply greps the output shown above. The relevant part is the middle one, as it's unique to each application, allowing the user to identify different applications (the title can't be used as it may change at any time).
 
-	h3 Switching windows
+			h2 Using wmctile
 
-	p Commands used:
+			.wrap
 
-	ul
-		li <a id="cmd_summon" href="#cmd_summon">summon</a> and <a id="cmd_summon_or_run" href="#cmd_summon_or_run">summon_or_run</a>
-		li <a href="#cmd_switch_to">switch_to</a> and <a id="cmd_switch_to_or_run" href="#cmd_switch_to_or_run">switch_to_or_run</a>
+				h3 Switching windows
 
-	p Wmctile distinguishes between switching to and summoning an application. Switching to an application means going to the application's workspace and raising the window. Summoning an application brings it to your current workspace and then raises it. There's no difference if you're working on a single workspace or if you don't use the <code>--all-workspaces</code> option.
+				.wrap
+					p Commands used:
 
-	h4#cmd_switch_to Switching to a window
+					ul
+						li <a id="cmd_summon" href="#cmd_summon">summon</a> and <a id="cmd_summon_or_run" href="#cmd_summon_or_run">summon_or_run</a>
+						li <a href="#cmd_switch_to">switch_to</a> and <a id="cmd_switch_to_or_run" href="#cmd_switch_to_or_run">switch_to_or_run</a>
 
-	.example-wrap.step-1
-		.example
-			.step-1
-				.window.blue style="height: 80%; top: 15%;"
-				.window.red style="width: 70%; left: 20%; height: 80%;"
-			.step-2
-				.window.red style="width: 70%; left: 20%; height: 80%;"
-				.window.blue style="height: 80%; top: 15%;"
-		.code.prompt
-			pre.step-1
-				code wmctile switch_to 'blue.Window'
+					p Wmctile distinguishes between switching to and summoning an application. Switching to an application means going to the application's workspace and raising the window. Summoning an application brings it to your current workspace and then raises it. There's no difference if you're working on a single workspace or if you don't use the <code>--all-workspaces</code> option.
 
-	h2 Creating keyboard shortcuts
+					h4#cmd_switch_to Switching to a window
+
+					.wrap
+						.example-wrap
+							.example
+								.step-1
+									.window.blue style="height: 80%; top: 15%;"
+									.window.red style="width: 70%; left: 20%; height: 80%;"
+								.step-2
+									.window.red style="width: 70%; left: 20%; height: 80%;"
+									.window.blue style="height: 80%; top: 15%;"
+							.code.prompt
+								pre.step-1
+									code wmctile switch_to 'blue.Window'
+
+						h5#cmd_switch_to_or_run Switching to a window/running a command
+
+						.wrap
+
+							h6 When a window exists:
+
+							.example-wrap
+								.example
+									.step-1
+										.window.blue style="height: 80%; top: 15%;"
+										.window.red style="width: 70%; left: 20%; height: 80%;"
+									.step-2
+										.window.red style="width: 70%; left: 20%; height: 80%;"
+										.window.blue style="height: 80%; top: 15%;"
+								.code.prompt
+									pre.step-1
+										code wmctile switch_to_or_run 'blue.Window' 'launch_blue_window_cmd'
+
+							h6 When it does not:
+
+							.example-wrap
+								.example
+									.step-1
+										.window.red style="width: 70%; left: 20%; height: 80%;"
+									.step-2
+										.window.red style="width: 70%; left: 20%; height: 80%;"
+										.window.blue style="height: 80%; top: 15%;"
+								.code.prompt
+									pre.step-1
+										code wmctile switch_to_or_run 'blue.Window' 'launch_blue_window_cmd'
+
+					h4#cmd_summon Summoning a window
+
+					.wrap
+						.example-wrap
+							.example
+								.step-1
+									.window.blue style="height: 80%; top: 15%;"
+									.window.red style="width: 70%; left: 20%; height: 80%;"
+								.step-2
+									.window.red style="width: 70%; left: 20%; height: 80%;"
+									.window.blue style="height: 80%; top: 15%;"
+							.code.prompt
+								pre.step-1
+									code wmctile summon 'blue.Window'
+
+						h5#cmd_summon_or_run Summoning a window/running a command
+						.wrap
+
+							h6 When a window exists:
+
+							.example-wrap
+								.example
+									.step-1
+										.window.blue style="height: 80%; top: 15%;"
+										.window.red style="width: 70%; left: 20%; height: 80%;"
+									.step-2
+										.window.red style="width: 70%; left: 20%; height: 80%;"
+										.window.blue style="height: 80%; top: 15%;"
+								.code.prompt
+									pre.step-1
+										code wmctile summon_or_run 'blue.Window' 'launch_blue_window_cmd'
+
+							h6 When it does not:
+
+							.example-wrap
+								.example
+									.step-1
+										.window.red style="width: 70%; left: 20%; height: 80%;"
+									.step-2
+										.window.red style="width: 70%; left: 20%; height: 80%;"
+										.window.blue style="height: 80%; top: 15%;"
+								.code.prompt
+									pre.step-1
+										code wmctile summon_or_run 'blue.Window' 'launch_blue_window_cmd'
+
+				h3 Moving windows around
+
+				.wrap
+
+					h4 Snapping window
+
+					pre.prompt
+						code snap where 'window_string' ['portion']
+
+					p You can snap window top, right, bottom or left. You may pass an additional portion argument to tell the script how wide/tall the window should be. Defaults to 0.5.
+
+					.example-wrap
+						.example
+							.step-1
+								.window.blue style="height: 80%; top: 15%;"
+								.window.red style="width: 70%; left: 20%; height: 80%;"
+							.step-2
+								.window.blue style="height: 80%; top: 15%;"
+								.window.red style="width: 50%; left: 0; height: 100%; top: 0;"
+						.code.prompt
+							pre.step-1
+								code wmctile snap left 'red.Window'
+
+					.example-wrap
+						.example
+							.step-1
+								.window.blue style="height: 80%; top: 15%;"
+								.window.red style="width: 70%; left: 20%; height: 80%;"
+							.step-2
+								.window.blue style="height: 80%; top: 15%;"
+								.window.red style="width: 30%; left: 70%; height: 100%; top: 0;"
+						.code.prompt
+							pre.step-1
+								code wmctile snap right 'red.Window' 0.3
+
+					.example-wrap
+						.example
+							.step-1
+								.window.blue style="height: 80%; top: 15%;"
+								.window.red style="width: 70%; left: 20%; height: 80%;"
+							.step-2
+								.window.blue style="height: 80%; top: 15%;"
+								.window.red style="width: 100%; left: 0; height: 70%; top: 0;"
+						.code.prompt
+							pre.step-1
+								code wmctile snap top 'red.Window' 0.7
+
+					.example-wrap
+						.example
+							.step-1
+								.window.blue style="height: 80%; top: 15%;"
+								.window.red style="width: 70%; left: 20%; height: 80%;"
+							.step-2
+								.window.blue style="height: 80%; top: 15%;"
+								.window.red style="width: 100%; left: 0; height: 40%; top: 60%;"
+						.code.prompt
+							pre.step-1
+								code wmctile snap bottom 'red.Window' 0.4
+
+
+			h2 Creating keyboard shortcuts
+			.wrap
+				| shortcuts

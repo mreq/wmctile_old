@@ -6,7 +6,7 @@ class Wmctile::Class
 	def notify title, string, icon = nil
 		if icon
 			system "notify-send -i '#{ icon }' '#{title}' '#{string}'"
-		else	
+		else
 			system "notify-send '#{title}' '#{string}'"
 		end
 	end

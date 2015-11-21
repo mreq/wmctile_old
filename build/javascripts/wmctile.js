@@ -10527,9 +10527,245 @@ return jQuery;
   })
 
 }(jQuery);
+/* ========================================================================
+ * Bootstrap: affix.js v3.1.1
+ * http://getbootstrap.com/javascript/#affix
+ * ========================================================================
+ * Copyright 2011-2014 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
+
++function ($) {
+  'use strict';
+
+  // AFFIX CLASS DEFINITION
+  // ======================
+
+  var Affix = function (element, options) {
+    this.options = $.extend({}, Affix.DEFAULTS, options)
+    this.$window = $(window)
+      .on('scroll.bs.affix.data-api', $.proxy(this.checkPosition, this))
+      .on('click.bs.affix.data-api',  $.proxy(this.checkPositionWithEventLoop, this))
+
+    this.$element     = $(element)
+    this.affixed      =
+    this.unpin        =
+    this.pinnedOffset = null
+
+    this.checkPosition()
+  }
+
+  Affix.RESET = 'affix affix-top affix-bottom'
+
+  Affix.DEFAULTS = {
+    offset: 0
+  }
+
+  Affix.prototype.getPinnedOffset = function () {
+    if (this.pinnedOffset) return this.pinnedOffset
+    this.$element.removeClass(Affix.RESET).addClass('affix')
+    var scrollTop = this.$window.scrollTop()
+    var position  = this.$element.offset()
+    return (this.pinnedOffset = position.top - scrollTop)
+  }
+
+  Affix.prototype.checkPositionWithEventLoop = function () {
+    setTimeout($.proxy(this.checkPosition, this), 1)
+  }
+
+  Affix.prototype.checkPosition = function () {
+    if (!this.$element.is(':visible')) return
+
+    var scrollHeight = $(document).height()
+    var scrollTop    = this.$window.scrollTop()
+    var position     = this.$element.offset()
+    var offset       = this.options.offset
+    var offsetTop    = offset.top
+    var offsetBottom = offset.bottom
+
+    if (this.affixed == 'top') position.top += scrollTop
+
+    if (typeof offset != 'object')         offsetBottom = offsetTop = offset
+    if (typeof offsetTop == 'function')    offsetTop    = offset.top(this.$element)
+    if (typeof offsetBottom == 'function') offsetBottom = offset.bottom(this.$element)
+
+    var affix = this.unpin   != null && (scrollTop + this.unpin <= position.top) ? false :
+                offsetBottom != null && (position.top + this.$element.height() >= scrollHeight - offsetBottom) ? 'bottom' :
+                offsetTop    != null && (scrollTop <= offsetTop) ? 'top' : false
+
+    if (this.affixed === affix) return
+    if (this.unpin) this.$element.css('top', '')
+
+    var affixType = 'affix' + (affix ? '-' + affix : '')
+    var e         = $.Event(affixType + '.bs.affix')
+
+    this.$element.trigger(e)
+
+    if (e.isDefaultPrevented()) return
+
+    this.affixed = affix
+    this.unpin = affix == 'bottom' ? this.getPinnedOffset() : null
+
+    this.$element
+      .removeClass(Affix.RESET)
+      .addClass(affixType)
+      .trigger($.Event(affixType.replace('affix', 'affixed')))
+
+    if (affix == 'bottom') {
+      this.$element.offset({ top: scrollHeight - offsetBottom - this.$element.height() })
+    }
+  }
+
+
+  // AFFIX PLUGIN DEFINITION
+  // =======================
+
+  var old = $.fn.affix
+
+  $.fn.affix = function (option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.affix')
+      var options = typeof option == 'object' && option
+
+      if (!data) $this.data('bs.affix', (data = new Affix(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  $.fn.affix.Constructor = Affix
+
+
+  // AFFIX NO CONFLICT
+  // =================
+
+  $.fn.affix.noConflict = function () {
+    $.fn.affix = old
+    return this
+  }
+
+
+  // AFFIX DATA-API
+  // ==============
+
+  $(window).on('load', function () {
+    $('[data-spy="affix"]').each(function () {
+      var $spy = $(this)
+      var data = $spy.data()
+
+      data.offset = data.offset || {}
+
+      if (data.offsetBottom) data.offset.bottom = data.offsetBottom
+      if (data.offsetTop)    data.offset.top    = data.offsetTop
+
+      $spy.affix(data)
+    })
+  })
+
+}(jQuery);
 (function() {
+  var generateSidebar, initExamples;
+
+  generateSidebar = function() {
+    var createHtml, generate, headings, menu, sidebar;
+    menu = [];
+    generate = function(arr, heading) {
+      var newId, submenu;
+      submenu = [];
+      if (!heading.attr('id')) {
+        newId = heading.text().toLowerCase().replace(/\s+/g, '-').replace(':', '');
+        while ($(newId).length > 0) {
+          newId = newId + '-';
+        }
+        console.log(newId);
+        heading.attr('id', newId);
+      }
+      heading.next('.wrap').children('h3').each(function() {
+        return generate(submenu, $(this));
+      });
+      return arr.push({
+        heading: heading,
+        menu: submenu
+      });
+    };
+    headings = $('#main-col').find('h2');
+    headings.each(function() {
+      var $this;
+      $this = $(this);
+      return generate(menu, $this);
+    });
+    createHtml = function(arr) {
+      var a, item, _i, _len;
+      a = [];
+      a.push('<ul class="nav nav-stacked">');
+      for (_i = 0, _len = arr.length; _i < _len; _i++) {
+        item = arr[_i];
+        a.push('<li>');
+        a.push('<a href="#' + item.heading.attr('id') + '">' + item.heading.text() + '</a>');
+        if (item.menu.length > 0) {
+          a.push(createHtml(item.menu));
+        }
+        a.push('</li>');
+      }
+      a.push('</ul>');
+      return a.join('');
+    };
+    sidebar = $('.docs-sidebar', '#aside-col');
+    sidebar.html(createHtml(menu));
+    sidebar.affix();
+    return sidebar.on('click', 'a', function(e) {
+      e.preventDefault();
+      return $('html, body').animate({
+        scrollTop: $($(this).attr('href')).offset().top - 70
+      });
+    });
+  };
+
+  initExamples = function() {
+    var $body, current, examples, lengths, setIndices;
+    lengths = [];
+    current = [];
+    examples = $('.example-wrap');
+    examples.each(function() {
+      var $this, a;
+      $this = $(this);
+      a = $this.find('.example > div').length;
+      $this.addClass("steps-" + a);
+      if (lengths.indexOf(a) === -1) {
+        lengths.push(a);
+        return current.push(0);
+      }
+    });
+    $body = $('body');
+    setIndices = function() {
+      var index, len, _i, _len, _results;
+      _results = [];
+      for (index = _i = 0, _len = lengths.length; _i < _len; index = ++_i) {
+        len = lengths[index];
+        current[index] = current[index] + 1;
+        if (current[index] > len) {
+          current[index] = 0;
+        }
+        $body.removeClass(function(index, css) {
+          var a;
+          a = css.match(/steps-2-\d+/g) || [];
+          return a.join(' ');
+        });
+        _results.push($body.addClass("steps-" + len + "-" + current[index]));
+      }
+      return _results;
+    };
+    setIndices();
+    return setInterval((function() {
+      return setIndices();
+    }), 1000);
+  };
+
   $(function() {
-    return console.log('todo');
+    generateSidebar();
+    return initExamples();
   });
 
 }).call(this);

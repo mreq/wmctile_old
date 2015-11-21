@@ -4,10 +4,13 @@
 body {
 	padding-top: 50px;
 }
+h5 {
+	font-weight: bold;
+}
 .prompt {
 	code {
 		&:before {
-			content: 'user@host:~$ ';
+			content: '$ ';
 			color: #aaa;
 		}
 	}
@@ -16,6 +19,7 @@ body {
 	position: relative;
 	padding-left: 175px;
 	height: 100px;
+	margin-bottom: 10px;
 	.example {
 		.rounded(3px);
 		.topleft;
@@ -69,7 +73,10 @@ body {
 				&:before { content: 'red.Window'; }
 			}
 		}
-		> div { display: none; }
+		> div {
+			.opacity(0);
+			.transition(opacity 0.2s ease);
+		}
 	}
 	.code {
 		#flex .display;
@@ -77,13 +84,10 @@ body {
 		height: 100%;
 		font-family: @font-family-monospace;
 	}
-
-	&.step-1 .step-1 { display: block !important; }
-	&.step-2 .step-2 { display: block !important; }
-	&.step-3 .step-3 { display: block !important; }
-	&.step-4 .step-4 { display: block !important; }
-	&.step-5 .step-5 { display: block !important; }
-	&.step-6 .step-6 { display: block !important; }
+	&.steps-2 {
+		body.steps-2-1 & .step-1 { .opacity(1); }
+		body.steps-2-2 & .step-2 { .opacity(1); }
+	}
 }
 
 #github-link {
@@ -102,4 +106,7 @@ body {
 		display: inline-block;
 		text-align: left;
 	}
+}
+#aside-col {
+	margin-top: 20px;
 }

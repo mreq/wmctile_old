@@ -2,4 +2,4 @@
 //= require bootstrap/transition
 //= require bootstrap/collapse
 
-//= require examples
+//= require guides
