@@ -7,7 +7,6 @@ generateSidebar = ->
 		unless heading.attr('id')
 			newId = heading.text().toLowerCase().replace(/\s+/g, '-').replace(':', '')
 			newId = newId + '-'  while $(newId).length > 0
-			console.log newId
 			heading.attr 'id', newId
 		heading.next('.wrap').children('h3').each ->
 			generate submenu, $(this)

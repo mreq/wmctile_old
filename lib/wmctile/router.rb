@@ -12,7 +12,7 @@ class Wmctile::Router < Wmctile::Class
 	def dispatch args = []
 		if args.length
 			main_arg = args[0]
-			if ['--all-workspaces', '-a'].include? main_arg 
+			if ['--all-workspaces', '-a'].include? main_arg
 				@all_workspaces = true
 				drop = 2
 				main_arg = args[1]
@@ -58,7 +58,7 @@ examples:
 
 options:
    --all-workspaces, -a
-      Use all workspaces when searching for windows. 
+      Use all workspaces when searching for windows.
 
 explanation:
 	Optional arguments in the "commands" bellow are written in [square brackets]. This syntax only matches the fact that the argument is not required. When it's used, it shouldn't be surrounded by brackets.
@@ -205,7 +205,7 @@ additional information:
 		self.wt.resize_snap where, portion
 	end
 	def tile *args
-		self.wt.tile *args		
+		self.wt.tile *args
 	end
 
 end
