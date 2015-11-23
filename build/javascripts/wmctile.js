@@ -10679,7 +10679,6 @@ return jQuery;
         while ($(newId).length > 0) {
           newId = newId + '-';
         }
-        console.log(newId);
         heading.attr('id', newId);
       }
       heading.next('.wrap').children('h3').each(function() {
